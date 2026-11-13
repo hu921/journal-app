@@ -17,7 +17,7 @@ struct DailyJournalApp: App {
 
     var body: some Scene {
         WindowGroup {
-            EntryListView()
+            RootView()
         }
         .modelContainer(container)
     }
