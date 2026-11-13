@@ -55,6 +55,7 @@ struct StatsView: View {
                 .padding()
             }
             .navigationTitle("Stats")
+            .profileToolbar()
         }
     }
 }

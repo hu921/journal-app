@@ -78,6 +78,7 @@ struct EntryListView: View {
                 .accessibilityLabel("New entry")
             }
             .navigationTitle("Journal")
+            .profileToolbar()
             .searchable(text: $search)
             .sheet(item: $newEntry) { entry in
                 NavigationStack { EntryEditorView(entry: entry, isNew: true) }

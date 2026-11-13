@@ -33,6 +33,7 @@ struct EntryMapView: View {
                 }
             }
             .navigationTitle("Map")
+            .profileToolbar()
             .navigationBarTitleDisplayMode(.inline)
             .navigationDestination(item: $selected) { entry in
                 EntryDetailView(entry: entry)

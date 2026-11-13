@@ -50,6 +50,7 @@ struct CalendarView: View {
                 .onAppear { proxy.scrollTo(months.last, anchor: .bottom) }
             }
             .navigationTitle("Calendar")
+            .profileToolbar()
             .navigationBarTitleDisplayMode(.inline)
             .navigationDestination(item: $selectedDay) { day in
                 DayEntriesView(day: day.date, entries: byDay[day.date] ?? []) {
