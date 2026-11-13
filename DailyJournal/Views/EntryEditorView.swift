@@ -16,6 +16,32 @@ struct EntryEditorView: View {
     @State private var isLoadingMedia = false
     @State private var isLocating = false
 
+    // Text, date and place are edited as a local draft and saved on Done.
+    // Writing to the saved entry on every keystroke made every tab redraw (issue #3).
+    @State private var draftTitle: String
+    @State private var draftBody: String
+    @State private var draftDate: Date
+    @State private var draftPlace: String?
+    @State private var draftLatitude: Double?
+    @State private var draftLongitude: Double?
+    @FocusState private var bodyFocused: Bool
+
+    init(entry: JournalEntry, isNew: Bool = false) {
+        _entry = Bindable(entry)
+        self.isNew = isNew
+        _draftTitle = State(initialValue: entry.title)
+        _draftBody = State(initialValue: entry.body)
+        _draftDate = State(initialValue: entry.date)
+        _draftPlace = State(initialValue: entry.placeName)
+        _draftLatitude = State(initialValue: entry.latitude)
+        _draftLongitude = State(initialValue: entry.longitude)
+    }
+
+    private var hasChanges: Bool {
+        draftTitle != entry.title || draftBody != entry.body || draftDate != entry.date
+            || draftPlace != entry.placeName
+    }
+
     private var photosLeft: Int { JournalEntry.maxPhotos - entry.photos.count }
     private var videosLeft: Int { JournalEntry.maxVideos - entry.videos.count }
 
@@ -23,29 +49,40 @@ struct EntryEditorView: View {
         Form {
             Section {
                 if !autoTitle {
-                    TextField("Title", text: $entry.title)
+                    TextField("Title", text: $draftTitle)
                         .appFont(.headline)
                 }
-                TextField("What happened today?", text: $entry.body, axis: .vertical)
-                    .lineLimit(6...)
+                ZStack(alignment: .topLeading) {
+                    if draftBody.isEmpty {
+                        Text("What happened today?")
+                            .foregroundStyle(.tertiary)
+                            .padding(.top, 8)
+                            .padding(.leading, 5)
+                            .allowsHitTesting(false)
+                    }
+                    TextEditor(text: $draftBody)
+                        .focused($bodyFocused)
+                        .frame(minHeight: 180)
+                        .scrollContentBackground(.hidden)
+                }
             }
 
             Section {
-                DatePicker("Date", selection: $entry.date)
+                DatePicker("Date", selection: $draftDate)
                 HStack {
-                    Label(entry.placeName ?? "No location", systemImage: "mappin.and.ellipse")
-                        .foregroundStyle(entry.placeName == nil ? .secondary : .primary)
+                    Label(draftPlace ?? "No location", systemImage: "mappin.and.ellipse")
+                        .foregroundStyle(draftPlace == nil ? .secondary : .primary)
                         .lineLimit(1)
                     Spacer()
                     if isLocating {
                         ProgressView()
-                    } else if entry.placeName == nil {
+                    } else if draftPlace == nil {
                         Button("Add") { addLocation() }
                     } else {
                         Button("Remove", role: .destructive) {
-                            entry.placeName = nil
-                            entry.latitude = nil
-                            entry.longitude = nil
+                            draftPlace = nil
+                            draftLatitude = nil
+                            draftLongitude = nil
                         }
                     }
                 }
@@ -78,37 +115,49 @@ struct EntryEditorView: View {
                 Text("Media")
             }
         }
-        .interactiveDismissDisabled(isNew)
+        .interactiveDismissDisabled(isNew || hasChanges)
         .navigationTitle(isNew ? "New Entry" : "Edit Entry")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            if isNew {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
-                        context.delete(entry)
-                        dismiss()
-                    }
+            ToolbarItem(placement: .cancellationAction) {
+                Button("Cancel") {
+                    if isNew { context.delete(entry) }
+                    dismiss()
                 }
             }
             ToolbarItem(placement: .confirmationAction) {
-                Button("Done") { dismiss() }
+                Button("Done") { save() }
             }
         }
         .onChange(of: photoItems) { _, items in add(items, limit: photosLeft); photoItems = [] }
         .onChange(of: videoItems) { _, items in add(items, limit: videosLeft); videoItems = [] }
         .task {
             // New entries pick up the current location automatically.
-            if isNew && entry.placeName == nil { addLocation() }
+            if isNew && draftPlace == nil { addLocation() }
+            if isNew { bodyFocused = true }
         }
+    }
+
+    private func save() {
+        if entry.title != draftTitle { entry.title = draftTitle }
+        if entry.body != draftBody { entry.body = draftBody }
+        if entry.date != draftDate { entry.date = draftDate }
+        if entry.placeName != draftPlace {
+            entry.placeName = draftPlace
+            entry.latitude = draftLatitude
+            entry.longitude = draftLongitude
+        }
+        try? context.save()
+        dismiss()
     }
 
     private func addLocation() {
         isLocating = true
         Task {
             if let place = await location.currentPlace() {
-                entry.placeName = place.name
-                entry.latitude = place.latitude
-                entry.longitude = place.longitude
+                draftPlace = place.name
+                draftLatitude = place.latitude
+                draftLongitude = place.longitude
             }
             isLocating = false
         }

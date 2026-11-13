@@ -29,7 +29,10 @@ struct CalendarView: View {
     }
 
     var body: some View {
-        NavigationStack {
+        // Group once per redraw, not once per month.
+        let byDay = self.byDay
+        let months = self.months
+        return NavigationStack {
             ScrollViewReader { proxy in
                 ScrollView {
                     LazyVStack(alignment: .leading, spacing: 20, pinnedViews: .sectionHeaders) {
@@ -137,17 +140,19 @@ private struct DayCell: View {
 
     @AppStorage(SettingsKey.showCalendarPhotos) private var showPhotos = true
 
-    private var thumbnail: UIImage? {
+    private var photoEntry: JournalEntry? {
         guard showPhotos else { return nil }
-        return entries.lazy.compactMap { $0.thumbnailData }.first.flatMap(UIImage.init(data:))
+        return entries.first(where: \.hasMedia)
     }
     private var isToday: Bool { Calendar.current.isDateInToday(day) }
 
     var body: some View {
+        let photoEntry = photoEntry
+        let thumbnail = photoEntry
         ZStack {
-            if let thumbnail {
+            if let photoEntry {
                 Color.clear.overlay {
-                    Image(uiImage: thumbnail).resizable().scaledToFill()
+                    EntryThumbnail(entry: photoEntry)
                 }
                 .clipped()
                 .overlay(Color.black.opacity(0.25))

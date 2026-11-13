@@ -47,8 +47,8 @@ private struct MapPin: View {
 
     var body: some View {
         Group {
-            if let data = entry.thumbnailData, let image = UIImage(data: data) {
-                Image(uiImage: image).resizable().scaledToFill()
+            if entry.hasMedia {
+                EntryThumbnail(entry: entry)
             } else {
                 Image(systemName: "book.closed.fill")
                     .font(.system(size: 16))

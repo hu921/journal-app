@@ -33,6 +33,9 @@ final class JournalEntry {
     var photos: [MediaItem] { sortedMedia.filter { $0.kind == .photo } }
     var videos: [MediaItem] { sortedMedia.filter { $0.kind == .video } }
 
+    /// True if the entry has any photo or video (doesn't load image data).
+    var hasMedia: Bool { !(media ?? []).isEmpty }
+
     /// First image to show as the list thumbnail.
     var thumbnailData: Data? { sortedMedia.first?.thumbnail }
 
