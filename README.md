@@ -1,4 +1,4 @@
-# Daily Journal
+# Daily Log: Journal
 
 A simple iOS journal app. SwiftUI + SwiftData, synced with iCloud (CloudKit).
 
