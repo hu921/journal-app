@@ -45,7 +45,7 @@ struct EntryListView: View {
                             }
                         } header: {
                             Text(month, format: .dateTime.month(.wide).year())
-                                .font(.title3.bold())
+                                .appFont(.title3, weight: .bold)
                                 .foregroundStyle(.primary)
                                 .textCase(nil)
                         }
@@ -78,6 +78,7 @@ struct EntryListView: View {
                 .accessibilityLabel("New entry")
             }
             .navigationTitle("Journal")
+            .profileToolbar()
             .searchable(text: $search)
             .sheet(item: $newEntry) { entry in
                 NavigationStack { EntryEditorView(entry: entry, isNew: true) }

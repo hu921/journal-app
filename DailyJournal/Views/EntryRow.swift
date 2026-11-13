@@ -11,11 +11,11 @@ struct EntryRow: View {
             VStack(spacing: 2) {
                 if showsDay {
                     Text(entry.date, format: .dateTime.weekday(.abbreviated))
-                        .font(.caption.weight(.semibold))
+                        .appFont(.caption, weight: .semibold)
                         .textCase(.uppercase)
                         .foregroundStyle(.secondary)
                     Text(entry.date, format: .dateTime.day(.twoDigits))
-                        .font(.title2.weight(.medium))
+                        .appFont(.title2, weight: .medium)
                         .monospacedDigit()
                 }
             }
@@ -24,7 +24,7 @@ struct EntryRow: View {
 
             VStack(alignment: .leading, spacing: 6) {
                 Text(entry.displayTitle)
-                    .font(.headline)
+                    .appFont(.headline)
                     .lineLimit(3)
                 Spacer(minLength: 0)
                 HStack(spacing: 4) {
@@ -34,7 +34,7 @@ struct EntryRow: View {
                         Text(place).lineLimit(1)
                     }
                 }
-                .font(.subheadline)
+                .appFont(.subheadline)
                 .foregroundStyle(.secondary)
             }
             .frame(maxWidth: .infinity, alignment: .leading)

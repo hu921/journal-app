@@ -22,18 +22,18 @@ struct EntryDetailView: View {
 
                 VStack(alignment: .leading, spacing: 8) {
                     Text(entry.date, format: .dateTime.weekday(.wide).month(.wide).day().year().hour().minute())
-                        .font(.subheadline)
+                        .appFont(.subheadline)
                         .foregroundStyle(.secondary)
                     if let place = entry.placeName {
                         Label(place, systemImage: "mappin.and.ellipse")
-                            .font(.subheadline)
+                            .appFont(.subheadline)
                             .foregroundStyle(.secondary)
                     }
                     if !entry.title.isEmpty {
-                        Text(entry.title).font(.title2.bold())
+                        Text(entry.title).appFont(.title2, weight: .bold)
                     }
                     Text(entry.body)
-                        .font(.body)
+                        .appFont(.body)
                         .textSelection(.enabled)
                 }
                 .padding(.horizontal)

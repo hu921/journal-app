@@ -9,6 +9,7 @@ struct EntryEditorView: View {
     @Bindable var entry: JournalEntry
     var isNew = false
 
+    @AppStorage(SettingsKey.autoTitleFirstLine) private var autoTitle = true
     @StateObject private var location = LocationService()
     @State private var photoItems: [PhotosPickerItem] = []
     @State private var videoItems: [PhotosPickerItem] = []
@@ -21,8 +22,10 @@ struct EntryEditorView: View {
     var body: some View {
         Form {
             Section {
-                TextField("Title", text: $entry.title)
-                    .font(.headline)
+                if !autoTitle {
+                    TextField("Title", text: $entry.title)
+                        .appFont(.headline)
+                }
                 TextField("What happened today?", text: $entry.body, axis: .vertical)
                     .lineLimit(6...)
             }

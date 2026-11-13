@@ -34,8 +34,10 @@ final class JournalEntry {
     /// First image to show as the list thumbnail.
     var thumbnailData: Data? { sortedMedia.first?.thumbnail }
 
+    /// Title shown in lists. With Auto Title on, falls back to the first line of text.
     var displayTitle: String {
         if !title.trimmingCharacters(in: .whitespaces).isEmpty { return title }
+        guard UserDefaults.standard.autoTitleFirstLine else { return "Untitled" }
         let firstLine = body.split(separator: "\n").first.map(String.init) ?? ""
         return firstLine.isEmpty ? "Untitled" : firstLine
     }
