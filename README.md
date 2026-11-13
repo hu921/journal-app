@@ -15,7 +15,7 @@ Requires iOS 17 (iPhone 13 and newer). Xcode 16 or later.
 1. Open `DailyJournal.xcodeproj`.
 2. Select the **DailyJournal** target > **Signing & Capabilities**.
 3. Pick your **Team**.
-4. Change **Bundle Identifier** from `com.example.dailyjournal` to your own, e.g. `com.yourname.dailyjournal`.
+4. Change **Bundle Identifier** from `com.sarahu.dailyjournal` to your own, e.g. `com.yourname.dailyjournal`.
 5. Under **iCloud**, make sure **CloudKit** is checked and the container `iCloud.<your bundle id>` is ticked. Press **+** to create it if missing.
 6. Make sure **Background Modes > Remote notifications** and **Push Notifications** are present.
 7. Run on your iPhone. Sign in to iCloud on the device.
