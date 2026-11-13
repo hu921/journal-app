@@ -12,6 +12,8 @@ final class JournalEntry {
     var placeName: String?
     var latitude: Double?
     var longitude: Double?
+    /// ID from the app this entry was imported from, to skip duplicates on re-import.
+    var importID: String?
 
     @Relationship(deleteRule: .cascade, inverse: \MediaItem.entry)
     var media: [MediaItem]? = []
