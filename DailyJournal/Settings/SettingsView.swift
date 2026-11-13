@@ -48,13 +48,3 @@ struct SettingsView: View {
         }
     }
 }
-
-/// Placeholder until the format and flow are decided.
-struct ImportExportView: View {
-    var body: some View {
-        ContentUnavailableView("Coming soon", systemImage: "arrow.up.arrow.down",
-                               description: Text("Import and export will be added later."))
-            .navigationTitle("Import / Export")
-            .navigationBarTitleDisplayMode(.inline)
-    }
-}

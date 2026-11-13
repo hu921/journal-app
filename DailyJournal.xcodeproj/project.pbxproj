@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		B10000000000000000000001 /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = B20000000000000000000001 /* ZIPFoundation */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		A10000000000000000000001 /* DailyJournal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DailyJournal.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A10000000000000000000002 /* DailyJournal.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DailyJournal.entitlements; sourceTree = "<group>"; };
@@ -21,6 +25,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B10000000000000000000001 /* ZIPFoundation in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -72,6 +77,9 @@
 				A20000000000000000000001 /* DailyJournal */,
 			);
 			name = DailyJournal;
+			packageProductDependencies = (
+				B20000000000000000000001 /* ZIPFoundation */,
+			);
 			productName = DailyJournal;
 			productReference = A10000000000000000000001 /* DailyJournal.app */;
 			productType = "com.apple.product-type.application";
@@ -100,6 +108,9 @@
 			);
 			mainGroup = A40000000000000000000001;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				B30000000000000000000001 /* XCRemoteSwiftPackageReference "ZIPFoundation" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = A40000000000000000000002 /* Products */;
 			projectDirPath = "";
@@ -183,7 +194,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Config/DailyJournal.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = JRUQYNVARF;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -217,7 +228,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Config/DailyJournal.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = JRUQYNVARF;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -266,6 +277,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		B30000000000000000000001 /* XCRemoteSwiftPackageReference "ZIPFoundation" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/weichsel/ZIPFoundation.git";
+			requirement = {
+				kind = upToNextMinorVersion;
+				minimumVersion = 0.9.19;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		B20000000000000000000001 /* ZIPFoundation */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B30000000000000000000001 /* XCRemoteSwiftPackageReference "ZIPFoundation" */;
+			productName = ZIPFoundation;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = A70000000000000000000001 /* Project object */;
 }
