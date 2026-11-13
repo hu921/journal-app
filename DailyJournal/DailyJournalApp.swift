@@ -18,6 +18,7 @@ struct DailyJournalApp: App {
     var body: some Scene {
         WindowGroup {
             RootView()
+                .appAppearance()
         }
         .modelContainer(container)
     }

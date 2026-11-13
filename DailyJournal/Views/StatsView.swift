@@ -71,7 +71,7 @@ private struct StatTile: View {
         VStack(alignment: .leading, spacing: 6) {
             HStack {
                 Text(title.uppercased())
-                    .font(.caption.weight(.semibold))
+                    .appFont(.caption, weight: .semibold)
                     .foregroundStyle(.secondary)
                 Spacer()
                 if showsChevron {
@@ -84,7 +84,7 @@ private struct StatTile: View {
                            : .system(size: 32, weight: .bold, design: .rounded))
                 .foregroundStyle(tall ? Color.accentColor : .primary)
             if let unit {
-                Text(unit).font(.headline).foregroundStyle(.secondary)
+                Text(unit).appFont(.headline).foregroundStyle(.secondary)
             }
             if tall { Spacer() }
         }
@@ -104,7 +104,7 @@ private struct OnThisDayView: View {
             } label: {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(entry.date, format: .dateTime.year())
-                        .font(.caption.weight(.semibold))
+                        .appFont(.caption, weight: .semibold)
                         .foregroundStyle(Color.accentColor)
                     EntryRow(entry: entry, showsDay: false)
                 }

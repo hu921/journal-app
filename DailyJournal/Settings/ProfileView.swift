@@ -3,7 +3,6 @@ import SwiftData
 
 /// Edit first name, last name, gender and birthday.
 struct ProfileView: View {
-    @Environment(\.dismiss) private var dismiss
     @Bindable var profile: UserProfile
 
     private var birthday: Binding<Date> {
@@ -54,11 +53,6 @@ struct ProfileView: View {
         }
         .navigationTitle("Profile")
         .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .confirmationAction) {
-                Button("Done") { dismiss() }
-            }
-        }
     }
 }
 
@@ -84,7 +78,7 @@ struct ProfileAvatar: View {
     }
 }
 
-/// Top-right toolbar button that opens the profile.
+/// Top-right toolbar button that opens Settings.
 struct ProfileButton: View {
     @Environment(\.modelContext) private var context
     @Query(sort: \UserProfile.createdAt) private var profiles: [UserProfile]
@@ -102,9 +96,10 @@ struct ProfileButton: View {
         } label: {
             ProfileAvatar(initials: profiles.first?.initials ?? "")
         }
-        .accessibilityLabel("Profile")
+        .accessibilityLabel("Settings")
         .sheet(item: $editing) { profile in
-            NavigationStack { ProfileView(profile: profile) }
+            NavigationStack { SettingsView(profile: profile) }
+                .appAppearance()
         }
     }
 }

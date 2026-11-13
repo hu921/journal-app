@@ -45,7 +45,7 @@ struct EntryListView: View {
                             }
                         } header: {
                             Text(month, format: .dateTime.month(.wide).year())
-                                .font(.title3.bold())
+                                .appFont(.title3, weight: .bold)
                                 .foregroundStyle(.primary)
                                 .textCase(nil)
                         }

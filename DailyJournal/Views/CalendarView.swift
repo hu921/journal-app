@@ -86,7 +86,7 @@ private struct WeekdayHeader: View {
         HStack(spacing: 2) {
             ForEach(ordered, id: \.self) { s in
                 Text(s.uppercased())
-                    .font(.caption2.weight(.semibold))
+                    .appFont(.caption2, weight: .semibold)
                     .foregroundStyle(.secondary)
                     .frame(maxWidth: .infinity)
             }
@@ -115,7 +115,7 @@ private struct MonthGrid: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(month, format: .dateTime.month(.wide).year())
-                .font(.title3.bold())
+                .appFont(.title3, weight: .bold)
                 .padding(.horizontal, 4)
             LazyVGrid(columns: columns, spacing: 2) {
                 ForEach(Array(days.enumerated()), id: \.offset) { _, day in
@@ -135,8 +135,11 @@ private struct DayCell: View {
     let day: Date
     let entries: [JournalEntry]
 
+    @AppStorage(SettingsKey.showCalendarPhotos) private var showPhotos = true
+
     private var thumbnail: UIImage? {
-        entries.lazy.compactMap { $0.thumbnailData }.first.flatMap(UIImage.init(data:))
+        guard showPhotos else { return nil }
+        return entries.lazy.compactMap { $0.thumbnailData }.first.flatMap(UIImage.init(data:))
     }
     private var isToday: Bool { Calendar.current.isDateInToday(day) }
 
@@ -153,7 +156,7 @@ private struct DayCell: View {
             }
             VStack(spacing: 2) {
                 Text(day, format: .dateTime.day())
-                    .font(.headline)
+                    .appFont(.headline)
                     .foregroundStyle(thumbnail != nil || isToday ? .white : .primary)
                 if thumbnail == nil && !entries.isEmpty {
                     Circle().fill(isToday ? Color.white : Color.accentColor)
