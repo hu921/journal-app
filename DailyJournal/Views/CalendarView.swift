@@ -7,6 +7,10 @@ struct CalendarView: View {
     @Query(sort: \JournalEntry.date, order: .reverse) private var entries: [JournalEntry]
     @State private var selectedDay: DaySelection?
     @State private var newEntry: EditorTarget?
+    @State private var visibleMonth: Date?
+    @State private var scrubbing = false
+    @State private var showScrubber = false
+    @State private var hideScrubber: Task<Void, Never>?
 
     private let cal = Calendar.current
 
@@ -47,12 +51,29 @@ struct CalendarView: View {
                             WeekdayHeader()
                         }
                     }
+                    .scrollTargetLayout()
                     .padding(.horizontal, 8)
                     .padding(.bottom, 20)
                 }
                 // Open at the current month (the bottom). onAppear alone ran before the
                 // lazy months were laid out, so it stayed at the oldest month.
                 .defaultScrollAnchor(.bottom)
+                .scrollPosition(id: $visibleMonth, anchor: .top)
+                .scrollIndicators(months.count > 3 ? .hidden : .automatic)
+                .overlay(alignment: .trailing) {
+                    if months.count > 3 {
+                        MonthScrubber(months: months, current: visibleMonth, isDragging: $scrubbing) { month in
+                            proxy.scrollTo(month, anchor: .top)
+                        }
+                        .padding(.top, 36)      // below the weekday header
+                        .padding(.bottom, 8)
+                        .opacity(showScrubber || scrubbing ? 1 : 0)
+                        .allowsHitTesting(showScrubber || scrubbing)
+                        .animation(.easeInOut(duration: 0.2), value: showScrubber || scrubbing)
+                    }
+                }
+                .onChange(of: visibleMonth) { revealScrubber() }
+                .onChange(of: scrubbing) { revealScrubber() }
                 .task {
                     try? await Task.sleep(for: .milliseconds(50))
                     proxy.scrollTo(months.last, anchor: .bottom)
@@ -79,6 +100,17 @@ struct CalendarView: View {
             .sheet(item: $newEntry) { target in
                 NavigationStack { EntryEditorView(entry: target.entry, isNew: true) }
             }
+        }
+    }
+
+    /// Show the month handle while scrolling; hide it 2 seconds after scrolling stops.
+    private func revealScrubber() {
+        showScrubber = true
+        hideScrubber?.cancel()
+        hideScrubber = Task {
+            try? await Task.sleep(for: .seconds(2))
+            guard !Task.isCancelled, !scrubbing else { return }
+            showScrubber = false
         }
     }
 
