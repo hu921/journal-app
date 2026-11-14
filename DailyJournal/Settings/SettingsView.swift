@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// Settings home: Profile, Appearance, Import/Export, About.
+/// Settings home: About Me, Appearance, Import/Export, About.
 struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
     @Bindable var profile: UserProfile
@@ -14,12 +14,12 @@ struct SettingsView: View {
         List {
             Section {
                 NavigationLink {
-                    ProfileView(profile: profile)
+                    AboutMeView(profile: profile)
                 } label: {
                     HStack(spacing: 14) {
-                        ProfileAvatar(initials: profile.initials, size: 52)
+                        ProfileAvatar(initials: profile.initials, photo: profile.photo, size: 52)
                         VStack(alignment: .leading, spacing: 2) {
-                            Text("Profile").appFont(.headline)
+                            Text("About Me").appFont(.headline)
                             Text(profileSubtitle).appFont(.subheadline).foregroundStyle(.secondary)
                         }
                     }
