@@ -17,7 +17,7 @@ TestFlight: build N
 
 ## PR #5: Faster typing, logs, photo location, passcode and month scrubber (2026-11-14)
 
-TestFlight: builds 3 to 13 (latest: build 13)
+TestFlight: builds 3 to 14 (latest: build 14)
 
 - Typing and scrolling are faster with a large journal (editor saves on Done, thumbnails cached, Map and Stats load only when opened).
 - Fixed the new entry editor closing and reopening while typing.
@@ -30,7 +30,8 @@ TestFlight: builds 3 to 13 (latest: build 13)
 - Calendar opens at the current month, with a Today button.
 - Month scrubber on Calendar and List: drag the handle on the right edge to jump between months, with year marks.
 - Lock cover no longer shows after a screenshot or when Control Center opens.
-- Build number set to 13.
+- Map opens at your current location, with a button to return to it. Falls back to showing all entries if location is off.
+- Build number set to 14.
 
 ## PR #2: Add Import / Export (2026-11-13)
 
