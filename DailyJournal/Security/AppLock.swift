@@ -11,6 +11,9 @@ final class AppLock: ObservableObject {
     @Published private(set) var isLocked = false
     /// Goes up each time the locked app comes back on screen, so the lock screen asks for Face ID then.
     @Published private(set) var faceIDRequest = 0
+    /// Set after Face ID fails or is cancelled, so closing the Face ID prompt
+    /// (which makes the app inactive, then active) doesn't start it again.
+    var skipNextFaceID = false
 
     private var lockWindow: UIWindow?
     private var privacyWindow: UIWindow?
@@ -28,6 +31,7 @@ final class AppLock: ObservableObject {
         guard isEnabled else { hidePrivacyCover(); return }
         switch phase {
         case .background:
+            skipNextFaceID = false
             lock()
         case .inactive:
             // Screenshots, Control Center and notifications also make the app inactive,
@@ -39,7 +43,7 @@ final class AppLock: ObservableObject {
                 showLockWindow()
                 // Face ID can only run while the app is on screen. Asking from the
                 // background failed at once and left only the passcode pad.
-                faceIDRequest += 1
+                if !skipNextFaceID { faceIDRequest += 1 }
             }
         @unknown default:
             break

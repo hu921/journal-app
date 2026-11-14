@@ -101,6 +101,7 @@ struct LockScreen: View {
             Task { @MainActor in
                 authenticating = false
                 let seconds = String(format: "%.1f", Date().timeIntervalSince(started))
+                if !success { lock.skipNextFaceID = true }
                 if let error = error as? LAError {
                     AppLog.info("Unlock check failed after \(seconds)s: \(error.code.rawValue) \(error.localizedDescription)")
                 }
