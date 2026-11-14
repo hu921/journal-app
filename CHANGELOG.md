@@ -15,6 +15,22 @@ TestFlight: build N
 - Change two
 -->
 
+## PR #5: Faster typing, logs, photo location, passcode and month scrubber (2026-11-14)
+
+TestFlight: builds 3 to 12 (latest: build 12)
+
+- Typing and scrolling are faster with a large journal (editor saves on Done, thumbnails cached, Map and Stats load only when opened).
+- Fixed the new entry editor closing and reopening while typing.
+- In-app logs with crash capture. Settings > About > Share Logs.
+- Adding photos asks "Use photo's date, time and location?". No automatic current location.
+- Pick a location by search or "Use Current Location". Date, time and location can always be changed.
+- List screen titled "Daily Log".
+- Original wording and stats layout.
+- Passcode lock (4 digits) with Face ID. Locks when you leave the app. Forgot passcode uses the iPhone passcode.
+- Calendar opens at the current month, with a Today button.
+- Month scrubber on Calendar and List: drag the handle on the right edge to jump between months, with year marks.
+- Build number set to 12.
+
 ## PR #2: Add Import / Export (2026-11-13)
 
 TestFlight: build 2
