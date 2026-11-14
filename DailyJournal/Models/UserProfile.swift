@@ -2,9 +2,16 @@ import Foundation
 import SwiftData
 
 enum Gender: String, CaseIterable, Identifiable {
-    case male, female
+    case female, male, nonBinary = "nonbinary", preferNotToSay = "undisclosed"
     var id: String { rawValue }
-    var label: String { rawValue.capitalized }
+    var label: String {
+        switch self {
+        case .female: "Female"
+        case .male: "Male"
+        case .nonBinary: "Non-binary"
+        case .preferNotToSay: "Prefer not to say"
+        }
+    }
 }
 
 /// The person who owns the journal. Stored in SwiftData, so it syncs with iCloud.

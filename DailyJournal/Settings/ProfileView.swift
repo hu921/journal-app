@@ -2,15 +2,19 @@ import SwiftUI
 import SwiftData
 
 /// Edit first name, last name, gender and birthday.
+/// Gender and birthday show as one-line rows; tap to change them.
 struct ProfileView: View {
     @Bindable var profile: UserProfile
+    @State private var editingBirthday = false
 
     private var birthday: Binding<Date> {
         Binding(
-            get: { profile.birthday ?? Calendar.current.date(from: DateComponents(year: 1990, month: 1, day: 1))! },
+            get: { profile.birthday ?? Self.defaultBirthday },
             set: { profile.birthday = $0 }
         )
     }
+
+    private static let defaultBirthday = Calendar.current.date(from: DateComponents(year: 1990, month: 1, day: 1))!
 
     private var gender: Binding<Gender?> {
         Binding(get: { profile.gender }, set: { profile.gender = $0 })
@@ -34,21 +38,55 @@ struct ProfileView: View {
                     .textContentType(.familyName)
             }
 
-            Section("Gender") {
+            Section("Details") {
                 Picker("Gender", selection: gender) {
+                    Text("Not set").tag(Gender?.none)
                     ForEach(Gender.allCases) { g in
                         Text(g.label).tag(Optional(g))
                     }
                 }
-                .pickerStyle(.segmented)
-                .labelsHidden()
-            }
+                .pickerStyle(.menu)
 
-            Section("Birthday") {
-                DatePicker("Birthday", selection: birthday, in: ...Date.now, displayedComponents: .date)
-                    .datePickerStyle(.wheel)
-                    .labelsHidden()
-                    .frame(maxWidth: .infinity)
+                // Birthday: a one-line row. Tap to open the wheel, tap Done to close it.
+                Button {
+                    withAnimation {
+                        if profile.birthday == nil { profile.birthday = Self.defaultBirthday }
+                        editingBirthday.toggle()
+                    }
+                } label: {
+                    HStack {
+                        Text("Birthday").foregroundStyle(.primary)
+                        Spacer()
+                        if let date = profile.birthday {
+                            Text(date, format: .dateTime.month(.wide).day().year())
+                                .foregroundStyle(editingBirthday ? Color.accentColor : .secondary)
+                        } else {
+                            Text("Add").foregroundStyle(Color.accentColor)
+                        }
+                    }
+                }
+
+                if editingBirthday {
+                    DatePicker("Birthday", selection: birthday, in: ...Date.now, displayedComponents: .date)
+                        .datePickerStyle(.wheel)
+                        .labelsHidden()
+                        .frame(maxWidth: .infinity)
+                    HStack {
+                        Button("Remove", role: .destructive) {
+                            withAnimation {
+                                profile.birthday = nil
+                                editingBirthday = false
+                            }
+                        }
+                        .buttonStyle(.borderless)
+                        Spacer()
+                        Button("Done") {
+                            withAnimation { editingBirthday = false }
+                        }
+                        .buttonStyle(.borderless)
+                        .fontWeight(.semibold)
+                    }
+                }
             }
         }
         .navigationTitle("Profile")

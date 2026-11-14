@@ -17,7 +17,7 @@ TestFlight: build N
 
 ## PR #5: Faster typing, logs, photo location, passcode and month scrubber (2026-11-14)
 
-TestFlight: builds 3 to 17 (latest: build 17)
+TestFlight: builds 3 to 18 (latest: build 18)
 
 - Typing and scrolling are faster with a large journal (editor saves on Done, thumbnails cached, Map and Stats load only when opened).
 - Fixed the new entry editor closing and reopening while typing.
@@ -34,7 +34,8 @@ TestFlight: builds 3 to 17 (latest: build 17)
 - Face ID now starts as soon as you return to the app, instead of failing in the background. Failed checks are logged.
 - Tabs renamed: List is now Logs, Calendar is now Days.
 - New app icon: a white page with an orange ribbon on a warm gradient.
-- Build number set to 17.
+- Profile: gender and birthday are one-line rows. Tap to change. Gender options: Female, Male, Non-binary, Prefer not to say.
+- Build number set to 18.
 
 ## PR #2: Add Import / Export (2026-11-13)
 
