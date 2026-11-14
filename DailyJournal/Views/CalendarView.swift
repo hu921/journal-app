@@ -6,7 +6,7 @@ struct CalendarView: View {
     @Environment(\.modelContext) private var context
     @Query(sort: \JournalEntry.date, order: .reverse) private var entries: [JournalEntry]
     @State private var selectedDay: DaySelection?
-    @State private var newEntry: JournalEntry?
+    @State private var newEntry: EditorTarget?
 
     private let cal = Calendar.current
 
@@ -59,11 +59,12 @@ struct CalendarView: View {
                 DayEntriesView(day: day.date, entries: byDay[day.date] ?? []) {
                     let entry = JournalEntry(date: Self.dateAtCurrentTime(on: day.date))
                     context.insert(entry)
-                    newEntry = entry
+                    try? context.save()
+                    newEntry = EditorTarget(entry: entry)
                 }
             }
-            .sheet(item: $newEntry) { entry in
-                NavigationStack { EntryEditorView(entry: entry, isNew: true) }
+            .sheet(item: $newEntry) { target in
+                NavigationStack { EntryEditorView(entry: target.entry, isNew: true) }
             }
         }
     }

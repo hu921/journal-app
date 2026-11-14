@@ -83,7 +83,8 @@ enum AppLog {
         let info = Bundle.main.infoDictionary
         let version = "\(info?["CFBundleShortVersionString"] ?? "?") (\(info?["CFBundleVersion"] ?? "?"))"
         AppLog.info("App launch. Version \(version), iOS \(UIDevice.current.systemVersion), \(deviceModel()), memory \(memoryMB()) MB")
-        if FileManager.default.fileExists(atPath: crashFile.path) {
+        let crashSize = (try? FileManager.default.attributesOfItem(atPath: crashFile.path))?[.size] as? Int ?? 0
+        if crashSize > 0 {
             AppLog.error("Previous run crashed. See crash.log in the shared logs.")
         }
     }

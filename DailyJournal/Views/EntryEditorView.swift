@@ -123,7 +123,10 @@ struct EntryEditorView: View {
             ToolbarItem(placement: .cancellationAction) {
                 Button("Cancel") {
                     AppLog.info("Editor cancel")
-                    if isNew { context.delete(entry) }
+                    if isNew {
+                        context.delete(entry)
+                        try? context.save()
+                    }
                     dismiss()
                 }
             }
@@ -247,4 +250,12 @@ struct MediaThumbnail: View {
         .clipShape(RoundedRectangle(cornerRadius: 8))
         .contentShape(Rectangle())
     }
+}
+
+/// What the "new entry" sheet shows. Its id never changes, unlike a model's id,
+/// which changes when SwiftData first saves the entry. That change made the
+/// sheet close and reopen empty while typing.
+struct EditorTarget: Identifiable {
+    let id = UUID()
+    let entry: JournalEntry
 }

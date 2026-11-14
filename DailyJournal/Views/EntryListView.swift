@@ -6,7 +6,7 @@ struct EntryListView: View {
     @Environment(\.modelContext) private var context
     @Query(sort: \JournalEntry.date, order: .reverse) private var entries: [JournalEntry]
     @State private var search = ""
-    @State private var newEntry: JournalEntry?
+    @State private var newEntry: EditorTarget?
 
     private var filtered: [JournalEntry] {
         guard !search.isEmpty else { return entries }
@@ -65,7 +65,8 @@ struct EntryListView: View {
                 Button {
                     let entry = JournalEntry()
                     context.insert(entry)
-                    newEntry = entry
+                    try? context.save()
+                    newEntry = EditorTarget(entry: entry)
                 } label: {
                     Image(systemName: "plus")
                         .font(.title2.weight(.semibold))
@@ -80,8 +81,8 @@ struct EntryListView: View {
             .navigationTitle("Journal")
             .profileToolbar()
             .searchable(text: $search)
-            .sheet(item: $newEntry) { entry in
-                NavigationStack { EntryEditorView(entry: entry, isNew: true) }
+            .sheet(item: $newEntry) { target in
+                NavigationStack { EntryEditorView(entry: target.entry, isNew: true) }
             }
         }
     }
