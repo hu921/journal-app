@@ -86,7 +86,7 @@ struct CalendarView: View {
                     }
                 }
             }
-            .navigationTitle("Calendar")
+            .navigationTitle("Days")
             .profileToolbar()
             .navigationBarTitleDisplayMode(.inline)
             .navigationDestination(item: $selectedDay) { day in

@@ -10,10 +10,10 @@ struct RootView: View {
         // whenever any entry changes, and these two do the most work (issue #3).
         TabView(selection: $tab) {
             EntryListView()
-                .tabItem { Label("List", systemImage: "list.bullet") }
+                .tabItem { Label("Logs", systemImage: "list.bullet") }
                 .tag(Tab.list)
             CalendarView()
-                .tabItem { Label("Calendar", systemImage: "calendar") }
+                .tabItem { Label("Days", systemImage: "calendar") }
                 .tag(Tab.calendar)
             Group { if tab == .map { EntryMapView() } else { Color.clear } }
                 .tabItem { Label("Map", systemImage: "map") }
