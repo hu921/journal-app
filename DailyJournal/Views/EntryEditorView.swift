@@ -25,6 +25,7 @@ struct EntryEditorView: View {
     @State private var draftLatitude: Double?
     @State private var draftLongitude: Double?
     @FocusState private var bodyFocused: Bool
+    @State private var loggedLines = 0
 
     init(entry: JournalEntry, isNew: Bool = false) {
         _entry = Bindable(entry)
@@ -121,12 +122,24 @@ struct EntryEditorView: View {
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button("Cancel") {
+                    AppLog.info("Editor cancel")
                     if isNew { context.delete(entry) }
                     dismiss()
                 }
             }
             ToolbarItem(placement: .confirmationAction) {
                 Button("Done") { save() }
+            }
+        }
+        .onAppear {
+            AppLog.info("Editor opened (\(isNew ? "new" : "existing") entry, \(draftBody.count) chars, \(entry.media?.count ?? 0) media), memory \(AppLog.memoryMB()) MB")
+        }
+        .onChange(of: draftBody) { _, text in
+            // Log when the line count changes, to trace typing problems. Never logs the text itself.
+            let lines = text.reduce(1) { $1 == "\n" ? $0 + 1 : $0 }
+            if lines != loggedLines {
+                AppLog.info("Typing: now \(lines) lines, \(text.count) chars, memory \(AppLog.memoryMB()) MB")
+                loggedLines = lines
             }
         }
         .onChange(of: photoItems) { _, items in add(items, limit: photosLeft); photoItems = [] }
@@ -139,6 +152,7 @@ struct EntryEditorView: View {
     }
 
     private func save() {
+        AppLog.info("Editor save: \(draftBody.count) chars")
         if entry.title != draftTitle { entry.title = draftTitle }
         if entry.body != draftBody { entry.body = draftBody }
         if entry.date != draftDate { entry.date = draftDate }
@@ -147,7 +161,11 @@ struct EntryEditorView: View {
             entry.latitude = draftLatitude
             entry.longitude = draftLongitude
         }
-        try? context.save()
+        do {
+            try AppLog.measure("Save entry") { try context.save() }
+        } catch {
+            AppLog.error("Save failed: \(error)")
+        }
         dismiss()
     }
 

@@ -3,6 +3,12 @@ import SwiftData
 
 @main
 struct DailyJournalApp: App {
+    @Environment(\.scenePhase) private var scenePhase
+
+    init() {
+        AppLog.start()
+    }
+
     let container: ModelContainer = {
         let schema = Schema([JournalEntry.self, MediaItem.self, UserProfile.self])
         // .automatic uses the iCloud container from the entitlements file,
@@ -11,6 +17,7 @@ struct DailyJournalApp: App {
         do {
             return try ModelContainer(for: schema, configurations: config)
         } catch {
+            AppLog.error("Could not create ModelContainer: \(error)")
             fatalError("Could not create ModelContainer: \(error)")
         }
     }()
@@ -21,5 +28,8 @@ struct DailyJournalApp: App {
                 .appAppearance()
         }
         .modelContainer(container)
+        .onChange(of: scenePhase) { _, phase in
+            AppLog.info("App is \(phase == .active ? "active" : phase == .background ? "in background" : "inactive"), memory \(AppLog.memoryMB()) MB")
+        }
     }
 }

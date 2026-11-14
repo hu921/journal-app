@@ -99,9 +99,11 @@ struct ImportExportView: View {
                 let exporter = await Task.detached { JournalExporter(modelContainer: container) }.value
                 let url = try await exporter.export(format, from: s, to: e)
                 working = nil
+                AppLog.info("Export \(format.rawValue) done")
                 shareURL = url
             } catch {
                 working = nil
+                AppLog.error("Export \(format.rawValue) failed: \(error)")
                 alert = AlertInfo(title: "Export failed", message: error.localizedDescription)
             }
         }
@@ -126,10 +128,12 @@ struct ImportExportView: View {
                     Task { @MainActor in progress = value }
                 }
                 working = nil
+                AppLog.info("Import done: \(Self.summary(result).replacingOccurrences(of: "\n", with: "; "))")
                 alert = AlertInfo(title: "Import finished", message: Self.summary(result))
                 await refreshCounts()
             } catch {
                 working = nil
+                AppLog.error("Import failed: \(error)")
                 alert = AlertInfo(title: "Import failed", message: error.localizedDescription)
             }
         }
