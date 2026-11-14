@@ -50,7 +50,20 @@ struct CalendarView: View {
                     .padding(.horizontal, 8)
                     .padding(.bottom, 20)
                 }
-                .onAppear { proxy.scrollTo(months.last, anchor: .bottom) }
+                // Open at the current month (the bottom). onAppear alone ran before the
+                // lazy months were laid out, so it stayed at the oldest month.
+                .defaultScrollAnchor(.bottom)
+                .task {
+                    try? await Task.sleep(for: .milliseconds(50))
+                    proxy.scrollTo(months.last, anchor: .bottom)
+                }
+                .toolbar {
+                    ToolbarItem(placement: .topBarLeading) {
+                        Button("Today") {
+                            withAnimation { proxy.scrollTo(months.last, anchor: .bottom) }
+                        }
+                    }
+                }
             }
             .navigationTitle("Calendar")
             .profileToolbar()
