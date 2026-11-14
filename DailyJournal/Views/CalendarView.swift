@@ -6,7 +6,11 @@ struct CalendarView: View {
     @Environment(\.modelContext) private var context
     @Query(sort: \JournalEntry.date, order: .reverse) private var entries: [JournalEntry]
     @State private var selectedDay: DaySelection?
-    @State private var newEntry: JournalEntry?
+    @State private var newEntry: EditorTarget?
+    @State private var visibleMonth: Date?
+    @State private var scrubbing = false
+    @State private var showScrubber = false
+    @State private var hideScrubber: Task<Void, Never>?
 
     private let cal = Calendar.current
 
@@ -29,7 +33,10 @@ struct CalendarView: View {
     }
 
     var body: some View {
-        NavigationStack {
+        // Group once per redraw, not once per month.
+        let byDay = self.byDay
+        let months = self.months
+        return NavigationStack {
             ScrollViewReader { proxy in
                 ScrollView {
                     LazyVStack(alignment: .leading, spacing: 20, pinnedViews: .sectionHeaders) {
@@ -44,24 +51,66 @@ struct CalendarView: View {
                             WeekdayHeader()
                         }
                     }
+                    .scrollTargetLayout()
                     .padding(.horizontal, 8)
                     .padding(.bottom, 20)
                 }
-                .onAppear { proxy.scrollTo(months.last, anchor: .bottom) }
+                // Open at the current month (the bottom). onAppear alone ran before the
+                // lazy months were laid out, so it stayed at the oldest month.
+                .defaultScrollAnchor(.bottom)
+                .scrollPosition(id: $visibleMonth, anchor: .top)
+                .scrollIndicators(months.count > 3 ? .hidden : .automatic)
+                .overlay(alignment: .trailing) {
+                    if months.count > 3 {
+                        MonthScrubber(months: months, current: visibleMonth, isDragging: $scrubbing) { month in
+                            proxy.scrollTo(month, anchor: .top)
+                        }
+                        .padding(.top, 36)      // below the weekday header
+                        .padding(.bottom, 8)
+                        .opacity(showScrubber || scrubbing ? 1 : 0)
+                        .allowsHitTesting(showScrubber || scrubbing)
+                        .animation(.easeInOut(duration: 0.2), value: showScrubber || scrubbing)
+                    }
+                }
+                .onChange(of: visibleMonth) { revealScrubber() }
+                .onChange(of: scrubbing) { revealScrubber() }
+                .task {
+                    try? await Task.sleep(for: .milliseconds(50))
+                    proxy.scrollTo(months.last, anchor: .bottom)
+                }
+                .toolbar {
+                    ToolbarItem(placement: .topBarLeading) {
+                        Button("Today") {
+                            withAnimation { proxy.scrollTo(months.last, anchor: .bottom) }
+                        }
+                    }
+                }
             }
-            .navigationTitle("Calendar")
+            .navigationTitle("Days")
             .profileToolbar()
             .navigationBarTitleDisplayMode(.inline)
             .navigationDestination(item: $selectedDay) { day in
                 DayEntriesView(day: day.date, entries: byDay[day.date] ?? []) {
                     let entry = JournalEntry(date: Self.dateAtCurrentTime(on: day.date))
                     context.insert(entry)
-                    newEntry = entry
+                    try? context.save()
+                    newEntry = EditorTarget(entry: entry)
                 }
             }
-            .sheet(item: $newEntry) { entry in
-                NavigationStack { EntryEditorView(entry: entry, isNew: true) }
+            .sheet(item: $newEntry) { target in
+                NavigationStack { EntryEditorView(entry: target.entry, isNew: true) }
             }
+        }
+    }
+
+    /// Show the month handle while scrolling; hide it 2 seconds after scrolling stops.
+    private func revealScrubber() {
+        showScrubber = true
+        hideScrubber?.cancel()
+        hideScrubber = Task {
+            try? await Task.sleep(for: .seconds(2))
+            guard !Task.isCancelled, !scrubbing else { return }
+            showScrubber = false
         }
     }
 
@@ -137,17 +186,19 @@ private struct DayCell: View {
 
     @AppStorage(SettingsKey.showCalendarPhotos) private var showPhotos = true
 
-    private var thumbnail: UIImage? {
+    private var photoEntry: JournalEntry? {
         guard showPhotos else { return nil }
-        return entries.lazy.compactMap { $0.thumbnailData }.first.flatMap(UIImage.init(data:))
+        return entries.first(where: \.hasMedia)
     }
     private var isToday: Bool { Calendar.current.isDateInToday(day) }
 
     var body: some View {
+        let photoEntry = photoEntry
+        let thumbnail = photoEntry
         ZStack {
-            if let thumbnail {
+            if let photoEntry {
                 Color.clear.overlay {
-                    Image(uiImage: thumbnail).resizable().scaledToFill()
+                    EntryThumbnail(entry: photoEntry)
                 }
                 .clipped()
                 .overlay(Color.black.opacity(0.25))

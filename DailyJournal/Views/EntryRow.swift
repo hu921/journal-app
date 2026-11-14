@@ -39,10 +39,8 @@ struct EntryRow: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
 
-            if let data = entry.thumbnailData, let image = UIImage(data: data) {
-                Image(uiImage: image)
-                    .resizable()
-                    .scaledToFill()
+            if entry.hasMedia {
+                EntryThumbnail(entry: entry)
                     .frame(width: 72, height: 72)
                     .clipShape(RoundedRectangle(cornerRadius: 10))
             }

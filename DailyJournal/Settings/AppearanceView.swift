@@ -67,10 +67,10 @@ struct AppearanceView: View {
             }
 
             Section {
-                Toggle("Auto Title First Line", isOn: $autoTitle)
+                Toggle("Use First Line as Title", isOn: $autoTitle)
                 Toggle("Show Photos in Calendar", isOn: $calendarPhotos)
             } footer: {
-                Text("Auto title uses the first line of your text as the entry title.")
+                Text("When on, the first line of your text becomes the entry title.")
             }
         }
         .navigationTitle("Appearance")

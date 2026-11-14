@@ -35,19 +35,32 @@ struct StatsView: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 12) {
-                    HStack(spacing: 12) {
-                        StatTile(title: "Streak", value: streak, unit: streak == 1 ? "day" : "days", tall: true)
-                        VStack(spacing: 12) {
-                            StatTile(title: "Entries", value: entries.count)
-                            StatTile(title: "Days", value: dayStarts.count)
+                    // Streak banner across the top.
+                    HStack(spacing: 14) {
+                        Image(systemName: "flame.fill")
+                            .font(.system(size: 34))
+                            .foregroundStyle(.white)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Writing streak").appFont(.subheadline, weight: .semibold)
+                                .foregroundStyle(.white.opacity(0.9))
+                            Text("\(streak) \(streak == 1 ? "day" : "days") in a row")
+                                .appFont(.title2, weight: .bold)
+                                .foregroundStyle(.white)
                         }
+                        Spacer()
                     }
-                    HStack(spacing: 12) {
+                    .padding()
+                    .background(Color.accentColor.gradient, in: RoundedRectangle(cornerRadius: 16))
+
+                    LazyVGrid(columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)],
+                              spacing: 12) {
+                        StatTile(title: "Entries", value: entries.count)
+                        StatTile(title: "Days written", value: dayStarts.count)
                         StatTile(title: "Photos & videos", value: mediaCount)
                         NavigationLink {
                             OnThisDayView(entries: onThisDay)
                         } label: {
-                            StatTile(title: "On this day", value: onThisDay.count, showsChevron: true)
+                            StatTile(title: "Memories", value: onThisDay.count, showsChevron: true)
                         }
                         .buttonStyle(.plain)
                     }
@@ -117,6 +130,6 @@ private struct OnThisDayView: View {
                                        description: Text("Entries from this date in past years show up here."))
             }
         }
-        .navigationTitle("On This Day")
+        .navigationTitle("Memories")
     }
 }
