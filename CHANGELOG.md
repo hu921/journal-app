@@ -17,7 +17,7 @@ TestFlight: build N
 
 ## PR #5: Faster typing, logs, photo location, passcode and month scrubber (2026-11-14)
 
-TestFlight: builds 3 to 16 (latest: build 16)
+TestFlight: builds 3 to 17 (latest: build 17)
 
 - Typing and scrolling are faster with a large journal (editor saves on Done, thumbnails cached, Map and Stats load only when opened).
 - Fixed the new entry editor closing and reopening while typing.
@@ -33,7 +33,8 @@ TestFlight: builds 3 to 16 (latest: build 16)
 - Map opens at your current location, with a button to return to it. Falls back to showing all entries if location is off.
 - Face ID now starts as soon as you return to the app, instead of failing in the background. Failed checks are logged.
 - Tabs renamed: List is now Logs, Calendar is now Days.
-- Build number set to 16.
+- New app icon: a white page with an orange ribbon on a warm gradient.
+- Build number set to 17.
 
 ## PR #2: Add Import / Export (2026-11-13)
 
