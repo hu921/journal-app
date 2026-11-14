@@ -78,7 +78,7 @@ struct EntryListView: View {
                 .padding(24)
                 .accessibilityLabel("New entry")
             }
-            .navigationTitle("Journal")
+            .navigationTitle("Daily Log")
             .profileToolbar()
             .searchable(text: $search)
             .sheet(item: $newEntry) { target in
