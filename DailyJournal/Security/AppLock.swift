@@ -28,8 +28,9 @@ final class AppLock: ObservableObject {
         case .background:
             lock()
         case .inactive:
-            // App switcher: hide entries in the preview without locking yet.
-            if !isLocked { showPrivacyCover() }
+            // Screenshots, Control Center and notifications also make the app inactive,
+            // so do nothing here. The lock screen covers the app when it goes to the background.
+            break
         case .active:
             hidePrivacyCover()
             if isLocked { showLockWindow() }

@@ -17,7 +17,7 @@ TestFlight: build N
 
 ## PR #5: Faster typing, logs, photo location, passcode and month scrubber (2026-11-14)
 
-TestFlight: builds 3 to 12 (latest: build 12)
+TestFlight: builds 3 to 13 (latest: build 13)
 
 - Typing and scrolling are faster with a large journal (editor saves on Done, thumbnails cached, Map and Stats load only when opened).
 - Fixed the new entry editor closing and reopening while typing.
@@ -29,7 +29,8 @@ TestFlight: builds 3 to 12 (latest: build 12)
 - Passcode lock (4 digits) with Face ID. Locks when you leave the app. Forgot passcode uses the iPhone passcode.
 - Calendar opens at the current month, with a Today button.
 - Month scrubber on Calendar and List: drag the handle on the right edge to jump between months, with year marks.
-- Build number set to 12.
+- Lock cover no longer shows after a screenshot or when Control Center opens.
+- Build number set to 13.
 
 ## PR #2: Add Import / Export (2026-11-13)
 
