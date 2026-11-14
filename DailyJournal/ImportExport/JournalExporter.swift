@@ -10,10 +10,10 @@ enum ExportFormat: String, CaseIterable, Identifiable {
 
     var label: String {
         switch self {
-        case .json: "Export JSON (.zip)"
-        case .plainText: "Export Plain Text (.zip)"
-        case .csv: "Export Comma Separated (.csv)"
-        case .pdf: "Export PDF"
+        case .json: "Full Backup with Photos (.zip)"
+        case .plainText: "Text and Media Files (.zip)"
+        case .csv: "Spreadsheet (.csv)"
+        case .pdf: "Printable Book (.pdf)"
         }
     }
 }
