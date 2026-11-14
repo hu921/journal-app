@@ -3,7 +3,7 @@ import SwiftUI
 /// A handle on the right edge for jumping through months quickly.
 /// Drag it to move; a label shows the month, and years are marked along the track.
 struct MonthScrubber: View {
-    /// Months shown in the scroll view, oldest first.
+    /// Months in the order they appear on screen, top to bottom.
     let months: [Date]
     /// The month currently at the top of the scroll view.
     let current: Date?
@@ -106,5 +106,60 @@ struct MonthScrubber: View {
             marks.append((year, markY))
         }
         return marks
+    }
+}
+
+/// Tracks which month is at the top of a List, from rows appearing and disappearing.
+/// Use when the list is newest first.
+@Observable
+final class VisibleMonthTracker {
+    @ObservationIgnored private var counts: [Date: Int] = [:]
+    private(set) var top: Date?
+
+    func appeared(_ month: Date) {
+        counts[month, default: 0] += 1
+        update()
+    }
+
+    func disappeared(_ month: Date) {
+        let n = (counts[month] ?? 1) - 1
+        counts[month] = n > 0 ? n : nil
+        update()
+    }
+
+    private func update() {
+        let newest = counts.keys.max()
+        if newest != top { top = newest }
+    }
+}
+
+/// The month handle with show-while-scrolling behavior, for a List.
+/// Kept as its own view so scrolling only redraws the handle, not the list.
+struct ListMonthScrubber: View {
+    let months: [Date]
+    let tracker: VisibleMonthTracker
+    var onSelect: (Date) -> Void
+
+    @State private var scrubbing = false
+    @State private var visible = false
+    @State private var hideTask: Task<Void, Never>?
+
+    var body: some View {
+        MonthScrubber(months: months, current: tracker.top, isDragging: $scrubbing, onSelect: onSelect)
+            .opacity(visible || scrubbing ? 1 : 0)
+            .allowsHitTesting(visible || scrubbing)
+            .animation(.easeInOut(duration: 0.2), value: visible || scrubbing)
+            .onChange(of: tracker.top) { reveal() }
+            .onChange(of: scrubbing) { reveal() }
+    }
+
+    private func reveal() {
+        visible = true
+        hideTask?.cancel()
+        hideTask = Task {
+            try? await Task.sleep(for: .seconds(2))
+            guard !Task.isCancelled, !scrubbing else { return }
+            visible = false
+        }
     }
 }
