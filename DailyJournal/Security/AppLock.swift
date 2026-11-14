@@ -9,6 +9,8 @@ final class AppLock: ObservableObject {
 
     @AppStorage("useFaceID") var useFaceID = true
     @Published private(set) var isLocked = false
+    /// Goes up each time the locked app comes back on screen, so the lock screen asks for Face ID then.
+    @Published private(set) var faceIDRequest = 0
 
     private var lockWindow: UIWindow?
     private var privacyWindow: UIWindow?
@@ -33,7 +35,12 @@ final class AppLock: ObservableObject {
             break
         case .active:
             hidePrivacyCover()
-            if isLocked { showLockWindow() }
+            if isLocked {
+                showLockWindow()
+                // Face ID can only run while the app is on screen. Asking from the
+                // background failed at once and left only the passcode pad.
+                faceIDRequest += 1
+            }
         @unknown default:
             break
         }

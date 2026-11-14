@@ -9,6 +9,7 @@ struct LockScreen: View {
     @State private var failedAttempts = 0
     @State private var waitUntil: Date?
     @State private var message = "Enter Passcode"
+    @State private var authenticating = false
 
     var body: some View {
         VStack(spacing: 28) {
@@ -39,10 +40,10 @@ struct LockScreen: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color(.systemBackground))
         .task {
-            if lock.useFaceID, biometryIcon != nil {
-                authenticate(policy: .deviceOwnerAuthenticationWithBiometrics)
-            }
+            // At launch the app is already on screen, so ask right away.
+            if UIApplication.shared.applicationState == .active { autoFaceID() }
         }
+        .onChange(of: lock.faceIDRequest) { autoFaceID() }
     }
 
     private var biometryIcon: String? {
@@ -81,14 +82,28 @@ struct LockScreen: View {
         }
     }
 
+    private func autoFaceID() {
+        if lock.useFaceID, biometryIcon != nil {
+            authenticate(policy: .deviceOwnerAuthenticationWithBiometrics)
+        }
+    }
+
     private func authenticate(policy: LAPolicy) {
+        guard !authenticating else { return }
+        authenticating = true
+        let started = Date()
         let context = LAContext()
         context.localizedFallbackTitle = policy == .deviceOwnerAuthenticationWithBiometrics ? "Enter Passcode" : nil
         let reason = policy == .deviceOwnerAuthentication
             ? "Use your iPhone passcode to open Daily Log."
             : "Unlock Daily Log."
-        context.evaluatePolicy(policy, localizedReason: reason) { success, _ in
+        context.evaluatePolicy(policy, localizedReason: reason) { success, error in
             Task { @MainActor in
+                authenticating = false
+                let seconds = String(format: "%.1f", Date().timeIntervalSince(started))
+                if let error = error as? LAError {
+                    AppLog.info("Unlock check failed after \(seconds)s: \(error.code.rawValue) \(error.localizedDescription)")
+                }
                 if success {
                     lock.unlock(method: policy == .deviceOwnerAuthentication ? "device passcode" : "Face ID")
                 }
