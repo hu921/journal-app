@@ -9,6 +9,8 @@ struct DailyJournalApp: App {
         AppLog.start()
     }
 
+    @StateObject private var appLock = AppLock.shared
+
     let container: ModelContainer = {
         let schema = Schema([JournalEntry.self, MediaItem.self, UserProfile.self])
         // .automatic uses the iCloud container from the entitlements file,
@@ -26,10 +28,12 @@ struct DailyJournalApp: App {
         WindowGroup {
             RootView()
                 .appAppearance()
+                .task { appLock.lockIfEnabled() }
         }
         .modelContainer(container)
         .onChange(of: scenePhase) { _, phase in
             AppLog.info("App is \(phase == .active ? "active" : phase == .background ? "in background" : "inactive"), memory \(AppLog.memoryMB()) MB")
+            appLock.handle(phase)
         }
     }
 }

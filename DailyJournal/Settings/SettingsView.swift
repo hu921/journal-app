@@ -31,6 +31,9 @@ struct SettingsView: View {
                 NavigationLink { AppearanceView() } label: {
                     Label("Appearance", systemImage: "paintbrush")
                 }
+                NavigationLink { PasscodeSettingsView() } label: {
+                    Label("Passcode", systemImage: "lock")
+                }
                 NavigationLink { ImportExportView() } label: {
                     Label("Import / Export", systemImage: "arrow.up.arrow.down")
                 }
