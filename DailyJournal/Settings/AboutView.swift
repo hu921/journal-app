@@ -53,8 +53,6 @@ struct AboutView: View {
             Section("Credits") {
                 Text("Roboto, Lato and Open Sans are used under the SIL Open Font License 1.1.")
                     .appFont(.footnote)
-                Text("Day One is a trademark of its owner. Daily Log is an independent app and is not affiliated with or endorsed by Day One.")
-                    .appFont(.footnote)
             }
         }
         .sheet(item: $logURL) { url in
