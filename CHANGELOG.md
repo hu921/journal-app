@@ -17,7 +17,7 @@ TestFlight: build N
 
 ## PR #8: Add Google Drive backup and restore (2026-11-14)
 
-TestFlight: builds 22 to 28 (latest: build 28)
+TestFlight: builds 22 to 29 (latest: build 29)
 
 - New Settings > Backup screen. iCloud sync stays always on.
 - Turn on Google Drive backup; it asks you to sign in to Google.
@@ -32,7 +32,8 @@ TestFlight: builds 22 to 28 (latest: build 28)
 - Settings shows "Sync: On" (opens the Sync page) and "Last Sync" with the date and time of the latest iCloud sync or Google Drive backup.
 - With both on, iCloud syncs first, then the Google Drive backup runs.
 - Google sign-in set up (client ID added).
-- Build number set to 28.
+- Battery and memory: list, calendar and map thumbnails read only the small thumbnail, never the full photo or video. Calendar no longer regroups every entry on each scroll frame.
+- Build number set to 29.
 
 ## PR #7: Add About Me page (2026-11-14)
 
