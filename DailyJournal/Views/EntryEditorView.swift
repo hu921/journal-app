@@ -146,8 +146,10 @@ struct EntryEditorView: View {
             }
         }
         .onAppear {
+            EditorTracker.openCount += 1
             AppLog.info("Editor opened (\(isNew ? "new" : "existing") entry, \(draftBody.count) chars, \(entry.media?.count ?? 0) media), memory \(AppLog.memoryMB()) MB")
         }
+        .onDisappear { EditorTracker.openCount = max(0, EditorTracker.openCount - 1) }
         .onChange(of: draftBody) { _, text in
             // Log when the line count changes, to trace typing problems. Never logs the text itself.
             let lines = text.reduce(1) { $1 == "\n" ? $0 + 1 : $0 }
@@ -318,4 +320,10 @@ struct PhotoSuggestion {
         if let place { lines.append(place.name) }
         return lines.joined(separator: "\n")
     }
+}
+
+/// Counts open entry editors, so the app never resets the screen while one is open.
+@MainActor
+enum EditorTracker {
+    static var openCount = 0
 }
