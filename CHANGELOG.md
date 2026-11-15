@@ -17,7 +17,7 @@ TestFlight: build N
 
 ## PR #7: Add About Me page (2026-11-14)
 
-TestFlight: build 19
+TestFlight: builds 19 to 20 (latest: build 20)
 
 - Profile is now About Me, like the first page of a paper diary. Only filled-in items show.
 - Photo, nickname, birthday with zodiac sign, optional gender.
@@ -26,7 +26,8 @@ TestFlight: build 19
 - Right now: mood, what I'm into, this year's goals. Save them to a time capsule; a reminder shows after a year.
 - Favorite quote and a signature drawn with your finger.
 - New iCloud fields: deploy the CloudKit schema before TestFlight.
-- Build number set to 19.
+- Coming back to the app after a minute or more opens Logs at the top. An entry being written stays open.
+- Build number set to 20.
 
 ## PR #5: Faster typing, logs, photo location, passcode and month scrubber (2026-11-14)
 
