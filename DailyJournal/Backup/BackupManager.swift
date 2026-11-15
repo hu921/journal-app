@@ -67,7 +67,12 @@ final class BackupManager: ObservableObject {
         taskID = UIApplication.shared.beginBackgroundTask(withName: "Google Drive backup") {
             UIApplication.shared.endBackgroundTask(taskID)
         }
+        let leftAt = Date()
         Task {
+            // Both on: iCloud first. Give iCloud up to 10 seconds to upload, then Google Drive.
+            if UserDefaults.standard.object(forKey: "iCloudSyncOn") as? Bool ?? true {
+                await SyncMonitor.shared.waitForICloudUpload(since: leftAt, timeout: 10)
+            }
             await backUpNow(automatic: true)
             UIApplication.shared.endBackgroundTask(taskID)
         }
