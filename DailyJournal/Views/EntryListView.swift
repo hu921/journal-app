@@ -3,6 +3,7 @@ import SwiftData
 
 /// Main screen: entries grouped by month, newest first.
 struct EntryListView: View {
+    static let subtitle = "Moments with photos & video"
     @Environment(\.modelContext) private var context
     @Query(sort: \JournalEntry.date, order: .reverse) private var entries: [JournalEntry]
     @State private var search = ""
@@ -33,6 +34,13 @@ struct EntryListView: View {
             ZStack(alignment: .bottomTrailing) {
                 ScrollViewReader { proxy in
                 List {
+                    if #unavailable(iOS 26) {
+                        // Older iOS has no navigation subtitle: show it as the first row.
+                        Text(Self.subtitle)
+                            .appFont(.subheadline)
+                            .foregroundStyle(.secondary)
+                            .listRowSeparator(.hidden)
+                    }
                     ForEach(months, id: \.0) { month, monthEntries in
                         Section {
                             ForEach(Array(monthEntries.enumerated()), id: \.element.id) { index, entry in
@@ -96,11 +104,24 @@ struct EntryListView: View {
                 .accessibilityLabel("New entry")
             }
             .navigationTitle("journipod")
+            .modifier(SubtitleModifier(text: Self.subtitle))
             .profileToolbar()
             .searchable(text: $search)
             .sheet(item: $newEntry) { target in
                 NavigationStack { EntryEditorView(entry: target.entry, isNew: true) }
             }
+        }
+    }
+}
+
+/// Small subtitle under the large title (iOS 26 and later).
+private struct SubtitleModifier: ViewModifier {
+    let text: String
+    func body(content: Content) -> some View {
+        if #available(iOS 26, *) {
+            content.navigationSubtitle(text)
+        } else {
+            content
         }
     }
 }

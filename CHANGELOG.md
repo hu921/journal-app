@@ -17,11 +17,12 @@ TestFlight: build N
 
 ## PR #9: Rename app to journipod (2026-11-15)
 
-TestFlight: build 31
+TestFlight: builds 31 to 32 (latest: build 32)
 
 - Home screen name is now "Journal Logs".
 - In-app name is now "journipod" (About, list title, lock screen, import text, diagnostics).
 - Export files are named "journipod <date>". Export metadata says "journipod: Journal & Diary".
+- Logs page shows a small subtitle under the title: "Moments with photos & video".
 - Logs tab keeps its name. Bundle ID unchanged.
 - App Store name "journipod: Journal & Diary" is set in App Store Connect.
 
