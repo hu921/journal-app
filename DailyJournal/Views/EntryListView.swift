@@ -103,7 +103,7 @@ struct EntryListView: View {
                 .padding(24)
                 .accessibilityLabel("New entry")
             }
-            .navigationTitle("journipod")
+            .navigationTitle("Journal Logs")
             .modifier(SubtitleModifier(text: Self.subtitle))
             .profileToolbar()
             .searchable(text: $search)
