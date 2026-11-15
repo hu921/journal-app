@@ -1,5 +1,6 @@
 import SwiftUI
 import SwiftData
+import ImageIO
 
 /// Decodes thumbnails off the main thread and keeps them in memory,
 /// so scrolling the list, calendar and map doesn't stutter.
@@ -7,14 +8,31 @@ final class ThumbnailCache: @unchecked Sendable {
     static let shared = ThumbnailCache()
     private let cache = NSCache<NSString, UIImage>()
 
-    init() { cache.countLimit = 600 }
+    init() {
+        // Limit by memory, not count: 600 decoded thumbnails could use 200 MB.
+        cache.totalCostLimit = 40 * 1024 * 1024
+        NotificationCenter.default.addObserver(forName: UIApplication.didReceiveMemoryWarningNotification,
+                                               object: nil, queue: nil) { [cache] _ in cache.removeAllObjects() }
+        NotificationCenter.default.addObserver(forName: UIApplication.didEnterBackgroundNotification,
+                                               object: nil, queue: nil) { [cache] _ in cache.removeAllObjects() }
+    }
 
     func image(for key: String) -> UIImage? { cache.object(forKey: key as NSString) }
-    func store(_ image: UIImage, for key: String) { cache.setObject(image, forKey: key as NSString) }
+    func store(_ image: UIImage, for key: String) {
+        let cost = Int(image.size.width * image.size.height * image.scale * image.scale * 4)
+        cache.setObject(image, forKey: key as NSString, cost: cost)
+    }
 
     static func decode(_ data: Data) async -> UIImage? {
         await Task.detached(priority: .userInitiated) {
-            UIImage(data: data)?.preparingForDisplay()
+            // Decode at thumbnail size only, so a large stored image never decodes in full.
+            guard let source = CGImageSourceCreateWithData(data as CFData, nil),
+                  let cg = CGImageSourceCreateThumbnailAtIndex(source, 0, [
+                      kCGImageSourceCreateThumbnailFromImageAlways: true,
+                      kCGImageSourceCreateThumbnailWithTransform: true,
+                      kCGImageSourceThumbnailMaxPixelSize: 240,
+                  ] as CFDictionary) else { return nil }
+            return UIImage(cgImage: cg)
         }.value
     }
 }

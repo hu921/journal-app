@@ -4,11 +4,16 @@ import SwiftUI
 struct BackupView: View {
     @ObservedObject private var backup = BackupManager.shared
     @ObservedObject private var google = GoogleAuth.shared
+    @State private var notSetUp = false
 
     private var googleToggle: Binding<Bool> {
         Binding(
             get: { backup.isOn },
             set: { on in
+                if on && GoogleAuth.clientID == nil {
+                    notSetUp = true
+                    return
+                }
                 if on { Task { await backup.turnOn() } } else { backup.turnOff(signOut: false) }
             }
         )
@@ -30,7 +35,7 @@ struct BackupView: View {
                 Toggle(isOn: googleToggle) {
                     Label("Back Up to Google Drive", systemImage: "externaldrive")
                 }
-                .disabled(GoogleAuth.clientID == nil || backup.isWorking)
+                .disabled(backup.isWorking)
 
                 if backup.isOn {
                     if let email = google.email {
@@ -90,6 +95,11 @@ struct BackupView: View {
         }
         .navigationTitle("Backup")
         .navigationBarTitleDisplayMode(.inline)
+        .alert("Google Drive Not Ready", isPresented: $notSetUp) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text("Google sign-in isn't set up in this test build yet. It will work in a later build.")
+        }
     }
 }
 
