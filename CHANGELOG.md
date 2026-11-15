@@ -17,7 +17,7 @@ TestFlight: build N
 
 ## PR #8: Add Google Drive backup and restore (2026-11-14)
 
-TestFlight: builds 22 to 27 (latest: build 27)
+TestFlight: builds 22 to 28 (latest: build 28)
 
 - New Settings > Backup screen. iCloud sync stays always on.
 - Turn on Google Drive backup; it asks you to sign in to Google.
@@ -31,7 +31,8 @@ TestFlight: builds 22 to 27 (latest: build 27)
 - Backup: iCloud Sync is a switch (on by default; turning off applies after reopening). Google Drive shows "Signed in as" your email.
 - Settings shows "Sync: On" (opens the Sync page) and "Last Sync" with the date and time of the latest iCloud sync or Google Drive backup.
 - With both on, iCloud syncs first, then the Google Drive backup runs.
-- Build number set to 27.
+- Google sign-in set up (client ID added).
+- Build number set to 28.
 
 ## PR #7: Add About Me page (2026-11-14)
 
