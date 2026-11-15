@@ -1,6 +1,6 @@
 # Changelog
 
-All changes to Daily Log: Journal, grouped by pull request, newest first.
+All changes to journipod: Journal & Diary, grouped by pull request, newest first.
 
 Every new PR adds its own entry at the top of this file.
 
@@ -14,6 +14,16 @@ TestFlight: build N
 - Change one
 - Change two
 -->
+
+## PR #9: Rename app to journipod (2026-11-15)
+
+TestFlight: build 31
+
+- Home screen name is now "Journal Logs".
+- In-app name is now "journipod" (About, list title, lock screen, import text, diagnostics).
+- Export files are named "journipod <date>". Export metadata says "journipod: Journal & Diary".
+- Logs tab keeps its name. Bundle ID unchanged.
+- App Store name "journipod: Journal & Diary" is set in App Store Connect.
 
 ## PR #7: Add About Me page (2026-11-14)
 

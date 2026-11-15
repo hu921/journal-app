@@ -20,7 +20,7 @@ struct AboutView: View {
                     Image(systemName: "book.closed.fill")
                         .font(.system(size: 48))
                         .foregroundStyle(Color.accentColor)
-                    Text("Daily Log: Journal").appFont(.title2, weight: .bold)
+                    Text("journipod: Journal & Diary").appFont(.title2, weight: .bold)
                     Text("Version \(version)").appFont(.subheadline).foregroundStyle(.secondary)
                 }
                 .frame(maxWidth: .infinity)

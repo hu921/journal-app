@@ -62,7 +62,7 @@ struct ImportExportView: View {
             } header: {
                 Text("Import")
             } footer: {
-                Text("Use a JSON export from the Day One app, or a backup made by Daily Log. Entries already imported are skipped. Up to \(JournalEntry.maxPhotos) photos and \(JournalEntry.maxVideos) videos are kept per entry.")
+                Text("Use a JSON export from the Day One app, or a backup made by journipod. Entries already imported are skipped. Up to \(JournalEntry.maxPhotos) photos and \(JournalEntry.maxVideos) videos are kept per entry.")
             }
         }
         .navigationTitle("Import / Export")
