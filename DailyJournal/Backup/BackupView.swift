@@ -5,6 +5,17 @@ struct BackupView: View {
     @ObservedObject private var backup = BackupManager.shared
     @ObservedObject private var google = GoogleAuth.shared
     @State private var notSetUp = false
+    @AppStorage("iCloudSyncOn") private var iCloudOn = true
+    @State private var confirmICloudOff = false
+    /// The setting the app opened with; a change applies after reopening.
+    private static let iCloudAtLaunch = UserDefaults.standard.object(forKey: "iCloudSyncOn") as? Bool ?? true
+
+    private var iCloudToggle: Binding<Bool> {
+        Binding(
+            get: { iCloudOn },
+            set: { on in if on { iCloudOn = true } else { confirmICloudOff = true } }
+        )
+    }
 
     private var googleToggle: Binding<Bool> {
         Binding(
@@ -22,13 +33,17 @@ struct BackupView: View {
     var body: some View {
         Form {
             Section {
-                LabeledContent {
-                    Text("On")
-                } label: {
+                Toggle(isOn: iCloudToggle) {
                     Label("iCloud Sync", systemImage: "icloud")
                 }
             } footer: {
-                Text("Your entries sync to every device signed in to your Apple Account.")
+                if iCloudOn != Self.iCloudAtLaunch {
+                    Text("Close and reopen Daily Log to apply this change.")
+                } else if iCloudOn {
+                    Text("Your entries sync to every device signed in to your Apple Account.")
+                } else {
+                    Text("Entries stay on this iPhone only.")
+                }
             }
 
             Section {
@@ -39,7 +54,9 @@ struct BackupView: View {
 
                 if backup.isOn {
                     if let email = google.email {
-                        LabeledContent("Account", value: email)
+                        Label("Signed in as \(email)", systemImage: "checkmark.circle.fill")
+                            .appFont(.subheadline)
+                            .foregroundStyle(.secondary)
                     }
                     LabeledContent("Last Backup") {
                         if let last = backup.lastBackup {
@@ -95,6 +112,11 @@ struct BackupView: View {
         }
         .navigationTitle("Backup")
         .navigationBarTitleDisplayMode(.inline)
+        .confirmationDialog("Turn off iCloud Sync?", isPresented: $confirmICloudOff, titleVisibility: .visible) {
+            Button("Turn Off", role: .destructive) { iCloudOn = false }
+        } message: {
+            Text("New entries will stay on this iPhone and won't appear on your other devices. Entries already in iCloud are kept.")
+        }
         .alert("Google Drive Not Ready", isPresented: $notSetUp) {
             Button("OK", role: .cancel) {}
         } message: {

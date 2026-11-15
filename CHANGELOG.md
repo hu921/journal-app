@@ -17,7 +17,7 @@ TestFlight: build N
 
 ## PR #8: Add Google Drive backup and restore (2026-11-14)
 
-TestFlight: builds 22 to 24 (latest: build 24)
+TestFlight: builds 22 to 25 (latest: build 25)
 
 - New Settings > Backup screen. iCloud sync stays always on.
 - Turn on Google Drive backup; it asks you to sign in to Google.
@@ -28,7 +28,8 @@ TestFlight: builds 22 to 24 (latest: build 24)
 - Google Drive switch explains when sign-in isn't set up yet, instead of doing nothing.
 - Lower memory use: thumbnails decode at small size, the cache is capped at 40 MB and cleared in the background.
 - Logs record tab switches with memory use.
-- Build number set to 24.
+- Backup: iCloud Sync is a switch (on by default; turning off applies after reopening). Google Drive shows "Signed in as" your email.
+- Build number set to 25.
 
 ## PR #7: Add About Me page (2026-11-14)
 
