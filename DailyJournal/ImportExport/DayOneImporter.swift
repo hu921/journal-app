@@ -91,10 +91,7 @@ actor DayOneImporter {
         let existing = try modelContext.fetch(FetchDescriptor<JournalEntry>())
         // Also match entries written in this app, by the ID the exporter gives them,
         // so restoring a backup on the same phone doesn't make copies.
-        // Also match entries written in this app, by the ID the exporter gives them,
-        // so restoring a backup on the same phone doesn't make copies.
         let knownIDs = Set(existing.compactMap(\.importID))
-            .union(existing.map { JournalExporter.stableID(for: $0) })
             .union(existing.map { JournalExporter.stableID(for: $0) })
 
         var result = ImportResult()

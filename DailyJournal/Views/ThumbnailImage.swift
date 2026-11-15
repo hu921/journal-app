@@ -30,7 +30,7 @@ final class ThumbnailCache: @unchecked Sendable {
                   let cg = CGImageSourceCreateThumbnailAtIndex(source, 0, [
                       kCGImageSourceCreateThumbnailFromImageAlways: true,
                       kCGImageSourceCreateThumbnailWithTransform: true,
-                      kCGImageSourceThumbnailMaxPixelSize: 240,
+                      kCGImageSourceThumbnailMaxPixelSize: 300,
                   ] as CFDictionary) else { return nil }
             return UIImage(cgImage: cg)
         }.value
