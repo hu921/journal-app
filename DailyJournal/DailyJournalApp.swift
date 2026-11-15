@@ -7,6 +7,7 @@ struct DailyJournalApp: App {
 
     init() {
         AppLog.start()
+        MainActor.assumeIsolated { SyncMonitor.shared.start() }
     }
 
     @StateObject private var appLock = AppLock.shared

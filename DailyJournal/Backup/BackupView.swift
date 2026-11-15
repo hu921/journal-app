@@ -36,6 +36,13 @@ struct BackupView: View {
                 Toggle(isOn: iCloudToggle) {
                     Label("iCloud Sync", systemImage: "icloud")
                 }
+                if iCloudOn, let last = SyncMonitor.shared.lastICloudSync {
+                    LabeledContent("Last Sync") {
+                        Text(last, format: .dateTime.month(.abbreviated).day().year().hour().minute())
+                    }
+                }
+            } header: {
+                Text("iCloud")
             } footer: {
                 if iCloudOn != Self.iCloudAtLaunch {
                     Text("Close and reopen Daily Log to apply this change.")
@@ -110,7 +117,7 @@ struct BackupView: View {
                 }
             }
         }
-        .navigationTitle("Backup")
+        .navigationTitle("Sync")
         .navigationBarTitleDisplayMode(.inline)
         .confirmationDialog("Turn off iCloud Sync?", isPresented: $confirmICloudOff, titleVisibility: .visible) {
             Button("Turn Off", role: .destructive) { iCloudOn = false }
