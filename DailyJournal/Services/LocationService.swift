@@ -28,15 +28,21 @@ final class LocationService: NSObject, ObservableObject, CLLocationManagerDelega
             manager.requestLocation()
         }
         guard let location else { return nil }
+        return await Self.place(for: location.coordinate)
+    }
+
+    /// Turns a coordinate into a short place name like "Taipei 101, Taipei".
+    static func place(for coordinate: CLLocationCoordinate2D) async -> Place {
+        let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
         let placemark = try? await CLGeocoder().reverseGeocodeLocation(location).first
         let name = [placemark?.name, placemark?.locality]
             .compactMap { $0 }
             .reduce(into: [String]()) { if !$0.contains($1) { $0.append($1) } }
             .joined(separator: ", ")
         return Place(
-            name: name.isEmpty ? "Unknown place" : name,
-            latitude: location.coordinate.latitude,
-            longitude: location.coordinate.longitude
+            name: name.isEmpty ? String(format: "%.4f, %.4f", coordinate.latitude, coordinate.longitude) : name,
+            latitude: coordinate.latitude,
+            longitude: coordinate.longitude
         )
     }
 

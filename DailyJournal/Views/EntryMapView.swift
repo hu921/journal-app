@@ -2,10 +2,13 @@ import SwiftUI
 import SwiftData
 import MapKit
 
-/// Map of every entry that has a location. Tap a pin to open the entry.
+/// Map of every entry that has a location. Opens at the current location.
+/// Tap a pin to open the entry.
 struct EntryMapView: View {
     @Query(sort: \JournalEntry.date, order: .reverse) private var entries: [JournalEntry]
-    @State private var position: MapCameraPosition = .automatic
+    // Start at the current location; if location is off, fit all entries.
+    @State private var position: MapCameraPosition = .userLocation(fallback: .automatic)
+    @State private var locationManager = CLLocationManager()
     @State private var selected: JournalEntry?
 
     private var located: [JournalEntry] {
@@ -22,6 +25,16 @@ struct EntryMapView: View {
                         MapPin(entry: entry)
                             .onTapGesture { selected = entry }
                     }
+                }
+                UserAnnotation()
+            }
+            .mapControls {
+                MapUserLocationButton()
+                MapCompass()
+            }
+            .onAppear {
+                if locationManager.authorizationStatus == .notDetermined {
+                    locationManager.requestWhenInUseAuthorization()
                 }
             }
             .overlay {
@@ -47,8 +60,8 @@ private struct MapPin: View {
 
     var body: some View {
         Group {
-            if let data = entry.thumbnailData, let image = UIImage(data: data) {
-                Image(uiImage: image).resizable().scaledToFill()
+            if entry.hasMedia {
+                EntryThumbnail(entry: entry)
             } else {
                 Image(systemName: "book.closed.fill")
                     .font(.system(size: 16))

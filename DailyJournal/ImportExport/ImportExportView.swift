@@ -26,7 +26,7 @@ struct ImportExportView: View {
                     Image(systemName: "square.and.arrow.up.on.square")
                         .font(.system(size: 40))
                         .foregroundStyle(Color.accentColor)
-                    Text("Your entries are always yours. Export a copy any time, or bring entries in from Day One.")
+                    Text("Save a copy of your journal, or bring in entries from another app.")
                         .appFont(.footnote)
                         .foregroundStyle(.secondary)
                         .multilineTextAlignment(.center)
@@ -57,12 +57,12 @@ struct ImportExportView: View {
             }
 
             Section {
-                Button("Import Day One JSON (.zip)") { showImporter = true }
+                Button("Import from Day One (.zip)") { showImporter = true }
                     .disabled(working != nil)
             } header: {
                 Text("Import")
             } footer: {
-                Text("In Day One: Settings > Import/Export > Export Day One JSON. Entries already imported are skipped. Up to \(JournalEntry.maxPhotos) photos and \(JournalEntry.maxVideos) videos are kept per entry.")
+                Text("Use a JSON export from the Day One app, or a backup made by Daily Log. Entries already imported are skipped. Up to \(JournalEntry.maxPhotos) photos and \(JournalEntry.maxVideos) videos are kept per entry.")
             }
         }
         .navigationTitle("Import / Export")
@@ -99,9 +99,11 @@ struct ImportExportView: View {
                 let exporter = await Task.detached { JournalExporter(modelContainer: container) }.value
                 let url = try await exporter.export(format, from: s, to: e)
                 working = nil
+                AppLog.info("Export \(format.rawValue) done")
                 shareURL = url
             } catch {
                 working = nil
+                AppLog.error("Export \(format.rawValue) failed: \(error)")
                 alert = AlertInfo(title: "Export failed", message: error.localizedDescription)
             }
         }
@@ -126,10 +128,12 @@ struct ImportExportView: View {
                     Task { @MainActor in progress = value }
                 }
                 working = nil
+                AppLog.info("Import done: \(Self.summary(result).replacingOccurrences(of: "\n", with: "; "))")
                 alert = AlertInfo(title: "Import finished", message: Self.summary(result))
                 await refreshCounts()
             } catch {
                 working = nil
+                AppLog.error("Import failed: \(error)")
                 alert = AlertInfo(title: "Import failed", message: error.localizedDescription)
             }
         }

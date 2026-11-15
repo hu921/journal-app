@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct AboutView: View {
+    @State private var logURL: URL?
+    @State private var confirmClear = false
     private var version: String {
         let info = Bundle.main.infoDictionary
         let v = info?["CFBundleShortVersionString"] as? String ?? "1.0"
@@ -31,10 +33,34 @@ struct AboutView: View {
                 Label("Entries are saved on your device and synced with your iCloud account.", systemImage: "icloud")
             }
 
-            Section("Fonts") {
+            Section {
+                Button {
+                    logURL = AppLog.exportFile()
+                } label: {
+                    Label("Share Logs", systemImage: "doc.text.magnifyingglass")
+                }
+                Button(role: .destructive) {
+                    confirmClear = true
+                } label: {
+                    Label("Clear Logs", systemImage: "trash")
+                }
+            } header: {
+                Text("Diagnostics")
+            } footer: {
+                Text("Logs record app events, timings and crashes to help fix problems. They never include your journal text or photos.")
+            }
+
+            Section("Credits") {
                 Text("Roboto, Lato and Open Sans are used under the SIL Open Font License 1.1.")
                     .appFont(.footnote)
             }
+        }
+        .sheet(item: $logURL) { url in
+            ShareSheet(items: [url])
+                .presentationDetents([.medium, .large])
+        }
+        .confirmationDialog("Clear all logs?", isPresented: $confirmClear) {
+            Button("Clear Logs", role: .destructive) { AppLog.clear() }
         }
         .navigationTitle("About")
         .navigationBarTitleDisplayMode(.inline)

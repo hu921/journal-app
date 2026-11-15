@@ -6,7 +6,8 @@ struct EntryListView: View {
     @Environment(\.modelContext) private var context
     @Query(sort: \JournalEntry.date, order: .reverse) private var entries: [JournalEntry]
     @State private var search = ""
-    @State private var newEntry: JournalEntry?
+    @State private var newEntry: EditorTarget?
+    @State private var tracker = VisibleMonthTracker()
 
     private var filtered: [JournalEntry] {
         guard !search.isEmpty else { return entries }
@@ -27,8 +28,10 @@ struct EntryListView: View {
     }
 
     var body: some View {
-        NavigationStack {
+        let months = self.months
+        return NavigationStack {
             ZStack(alignment: .bottomTrailing) {
+                ScrollViewReader { proxy in
                 List {
                     ForEach(months, id: \.0) { month, monthEntries in
                         Section {
@@ -39,6 +42,8 @@ struct EntryListView: View {
                                     EntryRow(entry: entry, showsDay: index == 0 ||
                                              !Calendar.current.isDate(entry.date, inSameDayAs: monthEntries[index - 1].date))
                                 }
+                                .onAppear { tracker.appeared(month) }
+                                .onDisappear { tracker.disappeared(month) }
                             }
                             .onDelete { offsets in
                                 for i in offsets { context.delete(monthEntries[i]) }
@@ -49,9 +54,20 @@ struct EntryListView: View {
                                 .foregroundStyle(.primary)
                                 .textCase(nil)
                         }
+                        .id(month)
                     }
                 }
                 .listStyle(.plain)
+                .scrollIndicators(months.count > 3 ? .hidden : .automatic)
+                .overlay(alignment: .trailing) {
+                    if months.count > 3 {
+                        ListMonthScrubber(months: months.map(\.0), tracker: tracker) { month in
+                            proxy.scrollTo(month, anchor: .top)
+                        }
+                        .padding(.top, 8)
+                        .padding(.bottom, 100)   // stay above the + button
+                    }
+                }
                 .overlay {
                     if entries.isEmpty {
                         ContentUnavailableView("No entries yet",
@@ -61,11 +77,13 @@ struct EntryListView: View {
                         ContentUnavailableView.search(text: search)
                     }
                 }
+                }
 
                 Button {
                     let entry = JournalEntry()
                     context.insert(entry)
-                    newEntry = entry
+                    try? context.save()
+                    newEntry = EditorTarget(entry: entry)
                 } label: {
                     Image(systemName: "plus")
                         .font(.title2.weight(.semibold))
@@ -77,11 +95,11 @@ struct EntryListView: View {
                 .padding(24)
                 .accessibilityLabel("New entry")
             }
-            .navigationTitle("Journal")
+            .navigationTitle("Daily Log")
             .profileToolbar()
             .searchable(text: $search)
-            .sheet(item: $newEntry) { entry in
-                NavigationStack { EntryEditorView(entry: entry, isNew: true) }
+            .sheet(item: $newEntry) { target in
+                NavigationStack { EntryEditorView(entry: target.entry, isNew: true) }
             }
         }
     }
