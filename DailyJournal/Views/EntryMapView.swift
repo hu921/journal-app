@@ -63,11 +63,9 @@ private struct MapPin: View {
             if entry.hasMedia {
                 EntryThumbnail(entry: entry)
             } else {
-                Image(systemName: "book.closed.fill")
-                    .font(.system(size: 16))
-                    .foregroundStyle(.white)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .background(Color.accentColor)
+                Image("AppLogo")
+                    .resizable()
+                    .scaledToFill()
             }
         }
         .frame(width: 40, height: 40)

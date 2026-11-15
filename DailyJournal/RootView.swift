@@ -28,7 +28,7 @@ struct RootView: View {
                 .tabItem { Label("Map", systemImage: "map") }
                 .tag(Tab.map)
             Group { if tab == .stats { StatsView() } else { Color.clear } }
-                .tabItem { Label("Stats", systemImage: "chart.bar") }
+                .tabItem { Label("Streak", systemImage: "flame.fill") }
                 .tag(Tab.stats)
         }
         .onChange(of: scenePhase) { _, phase in

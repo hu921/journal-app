@@ -17,9 +17,11 @@ struct AboutView: View {
         List {
             Section {
                 VStack(spacing: 8) {
-                    Image(systemName: "book.closed.fill")
-                        .font(.system(size: 48))
-                        .foregroundStyle(Color.accentColor)
+                    Image("AppLogo")
+                        .resizable()
+                        .frame(width: 80, height: 80)
+                        .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+                        .accessibilityHidden(true)
                     Text("journipod: Journal & Diary").appFont(.title2, weight: .bold)
                     Text("Version \(version)").appFont(.subheadline).foregroundStyle(.secondary)
                 }
