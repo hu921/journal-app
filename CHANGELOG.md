@@ -17,14 +17,15 @@ TestFlight: build N
 
 ## PR #8: Add Google Drive backup and restore (2026-11-14)
 
-TestFlight: build 22
+TestFlight: builds 22 to 23 (latest: build 23)
 
 - New Settings > Backup screen. iCloud sync stays always on.
 - Turn on Google Drive backup; it asks you to sign in to Google.
 - Backs up automatically when you add entries and leave the app, or tap Back Up Now. Keeps the last 5 backups in a "Daily Log Backups" folder.
 - Restore from a Drive backup. Entries you already have are skipped.
 - Needs a Google client ID in the build (see google-drive-setup.md).
-- Build number set to 22.
+- Logs list is more compact: date, title and photo only (no time or place line).
+- Build number set to 23.
 
 ## PR #7: Add About Me page (2026-11-14)
 
