@@ -28,12 +28,16 @@ struct DailyJournalApp: App {
         WindowGroup {
             RootView()
                 .appAppearance()
-                .task { appLock.lockIfEnabled() }
+                .task {
+                    appLock.lockIfEnabled()
+                    BackupManager.shared.container = container
+                }
         }
         .modelContainer(container)
         .onChange(of: scenePhase) { _, phase in
             AppLog.info("App is \(phase == .active ? "active" : phase == .background ? "in background" : "inactive"), memory \(AppLog.memoryMB()) MB")
             appLock.handle(phase)
+            if phase == .background { BackupManager.shared.autoBackupIfNeeded() }
         }
     }
 }

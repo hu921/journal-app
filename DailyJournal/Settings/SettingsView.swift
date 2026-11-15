@@ -34,6 +34,9 @@ struct SettingsView: View {
                 NavigationLink { PasscodeSettingsView() } label: {
                     Label("Passcode", systemImage: "lock")
                 }
+                NavigationLink { BackupView() } label: {
+                    Label("Backup", systemImage: "externaldrive.badge.icloud")
+                }
                 NavigationLink { ImportExportView() } label: {
                     Label("Import / Export", systemImage: "arrow.up.arrow.down")
                 }
