@@ -1,6 +1,6 @@
 import Foundation
 
-/// The few Google Drive calls the backup needs. Backups go in a "Daily Log Backups" folder.
+/// The few Google Drive calls the backup needs. Backups go in a "journi Diary Backups" folder.
 /// With the drive.file scope, the app only sees files it created itself.
 struct GoogleDrive {
     struct File: Decodable, Identifiable, Hashable {
@@ -21,7 +21,9 @@ struct GoogleDrive {
         }
     }
 
-    static let folderName = "Daily Log Backups"
+    static let folderName = "journi Diary Backups"
+    /// Folder name used before the rename. Renamed on first use so older backups stay listed.
+    static let oldFolderName = "Daily Log Backups"
     private static let api = "https://www.googleapis.com/drive/v3"
 
     private static let decoder: JSONDecoder = {
@@ -62,13 +64,27 @@ struct GoogleDrive {
 
     // MARK: Folder
 
-    /// Finds the backup folder, or creates it.
-    static func folderID() async throws -> String {
-        let q = "name = '\(folderName)' and mimeType = 'application/vnd.google-apps.folder' and trashed = false"
+    /// Finds a folder this app made, by name.
+    private static func findFolder(named name: String) async throws -> String? {
+        let q = "name = '\(name)' and mimeType = 'application/vnd.google-apps.folder' and trashed = false"
         let req = try await request(url("/files", ["q": q, "fields": "files(id)", "spaces": "drive"]))
         let (data, _) = try await send(req)
         struct List: Decodable { struct F: Decodable { let id: String }; let files: [F] }
-        if let id = try JSONDecoder().decode(List.self, from: data).files.first?.id { return id }
+        return try JSONDecoder().decode(List.self, from: data).files.first?.id
+    }
+
+    /// Finds the backup folder, or creates it. An old "Daily Log Backups" folder
+    /// is renamed, so its backups can still be restored.
+    static func folderID() async throws -> String {
+        if let id = try await findFolder(named: folderName) { return id }
+
+        if let old = try await findFolder(named: oldFolderName) {
+            var rename = try await request(url("/files/\(old)", ["fields": "id"]), method: "PATCH")
+            rename.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            rename.httpBody = try JSONSerialization.data(withJSONObject: ["name": folderName])
+            try await send(rename)
+            return old
+        }
 
         var create = try await request(url("/files", ["fields": "id"]), method: "POST")
         create.setValue("application/json", forHTTPHeaderField: "Content-Type")

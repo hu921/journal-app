@@ -93,7 +93,7 @@ final class BackupManager: ObservableObject {
             defer { try? FileManager.default.removeItem(at: zip.deletingLastPathComponent()) }
 
             status = "Uploading to Google Drive…"
-            try await GoogleDrive.upload(fileAt: zip, name: "Daily Log Backup \(Self.nameStamp.string(from: .now)).zip")
+            try await GoogleDrive.upload(fileAt: zip, name: "journi Diary Backup \(Self.nameStamp.string(from: .now)).zip")
 
             lastFingerprint = print
             lastBackup = .now
