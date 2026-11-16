@@ -29,10 +29,10 @@ actor JournalExporter {
         let stamp = Self.fileStamp.string(from: .now)
 
         switch format {
-        case .json: return try exportJSON(entries, in: dir, name: "journipod \(stamp)")
-        case .plainText: return try exportText(entries, in: dir, name: "journipod \(stamp)")
-        case .csv: return try exportCSV(entries, in: dir, name: "journipod \(stamp)")
-        case .pdf: return try PDFExporter.render(entries, to: dir.appendingPathComponent("journipod \(stamp).pdf"))
+        case .json: return try exportJSON(entries, in: dir, name: "journi Diary \(stamp)")
+        case .plainText: return try exportText(entries, in: dir, name: "journi Diary \(stamp)")
+        case .csv: return try exportCSV(entries, in: dir, name: "journi Diary \(stamp)")
+        case .pdf: return try PDFExporter.render(entries, to: dir.appendingPathComponent("journi Diary \(stamp).pdf"))
         }
     }
 

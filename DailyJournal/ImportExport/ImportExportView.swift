@@ -7,6 +7,7 @@ struct ImportExportView: View {
     @Environment(\.modelContext) private var context
 
     @State private var useDateRange = false
+    @AppStorage("exportPlace") private var place: BackupFolders.Place = .onMyiPhone
     @State private var startDate = Calendar.current.date(byAdding: .month, value: -1, to: .now) ?? .now
     @State private var endDate = Date.now
     @State private var counts: (entries: Int, media: Int)?
@@ -46,6 +47,16 @@ struct ImportExportView: View {
             } footer: {
                 if let counts {
                     Text("\(counts.entries) entries, \(counts.media) photos and videos")
+                }
+            }
+
+            Section {
+                Picker("Save to", selection: $place) {
+                    ForEach(BackupFolders.Place.allCases) { Text($0.label).tag($0) }
+                }
+            } footer: {
+                if place != .share {
+                    Text("Saved in \(place.path).")
                 }
             }
 
@@ -92,15 +103,24 @@ struct ImportExportView: View {
         progress = nil
         let container = context.container
         let (s, e) = range
+        let place = self.place
         Task {
             do {
                 try? context.save()
                 // Create the actor off the main thread so the work runs in the background.
                 let exporter = await Task.detached { JournalExporter(modelContainer: container) }.value
                 let url = try await exporter.export(format, from: s, to: e)
-                working = nil
-                AppLog.info("Export \(format.rawValue) done")
-                shareURL = url
+                if place == .share {
+                    working = nil
+                    AppLog.info("Export \(format.rawValue) done")
+                    shareURL = url
+                } else {
+                    working = "Saving…"
+                    let saved = try await Task.detached { try BackupFolders.save(url, to: place) }.value
+                    working = nil
+                    AppLog.info("Export \(format.rawValue) saved to \(place.rawValue)")
+                    alert = AlertInfo(title: "Saved", message: "\(saved.lastPathComponent)\n\nFind it in \(place.path).")
+                }
             } catch {
                 working = nil
                 AppLog.error("Export \(format.rawValue) failed: \(error)")
