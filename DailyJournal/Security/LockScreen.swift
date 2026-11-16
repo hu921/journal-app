@@ -95,8 +95,8 @@ struct LockScreen: View {
         let context = LAContext()
         context.localizedFallbackTitle = policy == .deviceOwnerAuthenticationWithBiometrics ? "Enter Passcode" : nil
         let reason = policy == .deviceOwnerAuthentication
-            ? "Use your iPhone passcode to open Daily Log."
-            : "Unlock Daily Log."
+            ? "Use your iPhone passcode to open journipod."
+            : "Unlock journipod."
         context.evaluatePolicy(policy, localizedReason: reason) { success, error in
             Task { @MainActor in
                 authenticating = false

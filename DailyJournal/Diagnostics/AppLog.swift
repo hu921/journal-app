@@ -114,7 +114,7 @@ enum AppLog {
     /// Joins all log files into one text file to share.
     static func exportFile() -> URL? {
         let fm = FileManager.default
-        var parts: [String] = ["Daily Log diagnostics, exported \(stamp.string(from: .now))",
+        var parts: [String] = ["journipod diagnostics, exported \(stamp.string(from: .now))",
                                "Device \(deviceModel()), iOS \(UIDevice.current.systemVersion), memory now \(memoryMB()) MB", ""]
         let files = ((try? fm.contentsOfDirectory(at: folder, includingPropertiesForKeys: nil)) ?? [])
             .sorted { $0.lastPathComponent < $1.lastPathComponent }
@@ -123,7 +123,7 @@ enum AppLog {
             parts.append("===== \(file.lastPathComponent) =====")
             parts.append(text)
         }
-        let out = fm.temporaryDirectory.appendingPathComponent("DailyLog-logs-\(Int(Date().timeIntervalSince1970)).txt")
+        let out = fm.temporaryDirectory.appendingPathComponent("journipod-logs-\(Int(Date().timeIntervalSince1970)).txt")
         do {
             try parts.joined(separator: "\n").write(to: out, atomically: true, encoding: .utf8)
             return out

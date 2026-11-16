@@ -17,11 +17,14 @@ struct AboutView: View {
         List {
             Section {
                 VStack(spacing: 8) {
-                    Image(systemName: "book.closed.fill")
-                        .font(.system(size: 48))
-                        .foregroundStyle(Color.accentColor)
-                    Text("Daily Log: Journal").appFont(.title2, weight: .bold)
+                    Image("AppLogo")
+                        .resizable()
+                        .frame(width: 80, height: 80)
+                        .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+                        .accessibilityHidden(true)
+                    Text("journipod Journal").appFont(.title2, weight: .bold)
                     Text("Version \(version)").appFont(.subheadline).foregroundStyle(.secondary)
+                    Text("© 2026 journipod").appFont(.footnote).foregroundStyle(.secondary)
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 12)

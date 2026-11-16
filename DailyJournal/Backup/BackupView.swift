@@ -45,7 +45,7 @@ struct BackupView: View {
                 Text("iCloud")
             } footer: {
                 if iCloudOn != Self.iCloudAtLaunch {
-                    Text("Close and reopen Daily Log to apply this change.")
+                    Text("Close and reopen the app to apply this change.")
                 } else if iCloudOn {
                     Text("Your entries sync to every device signed in to your Apple Account.")
                 } else {

@@ -1,6 +1,6 @@
 # Changelog
 
-All changes to Daily Log: Journal, grouped by pull request, newest first.
+All changes to journipod Journal, grouped by pull request, newest first.
 
 Every new PR adds its own entry at the top of this file.
 
@@ -14,6 +14,20 @@ TestFlight: build N
 - Change one
 - Change two
 -->
+
+## PR #9: Rename app to journipod (2026-11-15)
+
+TestFlight: builds 31 to 36 (latest: build 36)
+
+- App Store name: "journipod Journal" (set in App Store Connect).
+- Home screen name: "journi Diary".
+- Logs page title: "journi Diary", with a small subtitle: "Moments with photos & video". Tab name stays "Logs".
+- About shows the app icon, "journipod Journal", the version and "© 2026 journipod".
+- In-app name is "journipod" (lock screen, import text, diagnostics, export file names).
+- Map pins for entries without photos use the app icon.
+- Stats tab and page renamed to "Streak", with a flame tab icon.
+- Bundle ID unchanged.
+- Build 36: includes Google Drive backup (PR #8).
 
 ## PR #8: Add Google Drive backup and restore (2026-11-14)
 

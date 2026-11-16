@@ -67,7 +67,7 @@ struct StatsView: View {
                 }
                 .padding()
             }
-            .navigationTitle("Stats")
+            .navigationTitle("Streak")
             .profileToolbar()
         }
     }
