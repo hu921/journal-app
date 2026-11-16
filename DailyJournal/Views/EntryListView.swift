@@ -50,6 +50,7 @@ struct EntryListView: View {
                                     EntryRow(entry: entry, showsDay: index == 0 ||
                                              !Calendar.current.isDate(entry.date, inSameDayAs: monthEntries[index - 1].date))
                                 }
+                                .listRowInsets(EdgeInsets(top: 6, leading: 16, bottom: 6, trailing: 16))
                                 .onAppear { tracker.appeared(month) }
                                 .onDisappear { tracker.disappeared(month) }
                             }
