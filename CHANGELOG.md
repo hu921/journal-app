@@ -17,7 +17,7 @@ TestFlight: build N
 
 ## PR #9: Rename app to journipod (2026-11-15)
 
-TestFlight: builds 31 to 35 (latest: build 35)
+TestFlight: builds 31 to 36 (latest: build 36)
 
 - App Store name: "journipod Journal" (set in App Store Connect).
 - Home screen name: "journi Diary".
@@ -27,6 +27,28 @@ TestFlight: builds 31 to 35 (latest: build 35)
 - Map pins for entries without photos use the app icon.
 - Stats tab and page renamed to "Streak", with a flame tab icon.
 - Bundle ID unchanged.
+- Build 36: includes Google Drive backup (PR #8).
+
+## PR #8: Add Google Drive backup and restore (2026-11-14)
+
+TestFlight: builds 22 to 30 (latest: build 30)
+
+- New Settings > Backup screen. iCloud sync stays always on.
+- Turn on Google Drive backup; it asks you to sign in to Google.
+- Backs up automatically when you add entries and leave the app, or tap Back Up Now. Keeps the last 5 backups in a "Daily Log Backups" folder.
+- Restore from a Drive backup. Entries you already have are skipped.
+- Needs a Google client ID in the build (see google-drive-setup.md).
+- Logs list is more compact: date, title and photo only (no time or place line).
+- Google Drive switch explains when sign-in isn't set up yet, instead of doing nothing.
+- Lower memory use: thumbnails decode at small size, the cache is capped at 40 MB and cleared in the background.
+- Logs record tab switches with memory use.
+- Backup: iCloud Sync is a switch (on by default; turning off applies after reopening). Google Drive shows "Signed in as" your email.
+- Settings shows "Sync: On" (opens the Sync page) and "Last Sync" with the date and time of the latest iCloud sync or Google Drive backup.
+- With both on, iCloud syncs first, then the Google Drive backup runs.
+- Google sign-in set up (client ID added).
+- Battery and memory: list, calendar and map thumbnails read only the small thumbnail, never the full photo or video. Calendar no longer regroups every entry on each scroll frame.
+- Thumbnails decode at 300 px (matches the stored thumbnail), so they stay sharp on all iPhones.
+- Build number set to 30.
 
 ## PR #7: Add About Me page (2026-11-14)
 

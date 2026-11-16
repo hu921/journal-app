@@ -7,6 +7,7 @@ struct DailyJournalApp: App {
 
     init() {
         AppLog.start()
+        MainActor.assumeIsolated { SyncMonitor.shared.start() }
     }
 
     @StateObject private var appLock = AppLock.shared
@@ -15,7 +16,10 @@ struct DailyJournalApp: App {
         let schema = Schema([JournalEntry.self, MediaItem.self, UserProfile.self])
         // .automatic uses the iCloud container from the entitlements file,
         // so entries sync across the user's devices.
-        let config = ModelConfiguration(schema: schema, cloudKitDatabase: .automatic)
+        // Settings > Backup can turn iCloud sync off; it applies the next time the app opens.
+        let iCloudOn = UserDefaults.standard.object(forKey: "iCloudSyncOn") as? Bool ?? true
+        AppLog.info("iCloud sync \(iCloudOn ? "on" : "off")")
+        let config = ModelConfiguration(schema: schema, cloudKitDatabase: iCloudOn ? .automatic : .none)
         do {
             return try ModelContainer(for: schema, configurations: config)
         } catch {
@@ -28,12 +32,16 @@ struct DailyJournalApp: App {
         WindowGroup {
             RootView()
                 .appAppearance()
-                .task { appLock.lockIfEnabled() }
+                .task {
+                    appLock.lockIfEnabled()
+                    BackupManager.shared.container = container
+                }
         }
         .modelContainer(container)
         .onChange(of: scenePhase) { _, phase in
             AppLog.info("App is \(phase == .active ? "active" : phase == .background ? "in background" : "inactive"), memory \(AppLog.memoryMB()) MB")
             appLock.handle(phase)
+            if phase == .background { BackupManager.shared.autoBackupIfNeeded() }
         }
     }
 }

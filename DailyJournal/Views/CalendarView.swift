@@ -11,6 +11,9 @@ struct CalendarView: View {
     @State private var scrubbing = false
     @State private var showScrubber = false
     @State private var hideScrubber: Task<Void, Never>?
+    /// Grouping is cached: scrolling redraws this view many times a second,
+    /// and regrouping every entry each time wasted CPU and battery.
+    @State private var cache: (byDay: [Date: [JournalEntry]], months: [Date])?
 
     private let cal = Calendar.current
 
@@ -33,9 +36,8 @@ struct CalendarView: View {
     }
 
     var body: some View {
-        // Group once per redraw, not once per month.
-        let byDay = self.byDay
-        let months = self.months
+        let byDay = cache?.byDay ?? self.byDay
+        let months = cache?.months ?? self.months
         return NavigationStack {
             ScrollViewReader { proxy in
                 ScrollView {
@@ -86,6 +88,8 @@ struct CalendarView: View {
                     }
                 }
             }
+            .onAppear { if cache == nil { cache = (self.byDay, self.months) } }
+            .onChange(of: entries.map(\.date)) { cache = (self.byDay, self.months) }
             .navigationTitle("Days")
             .profileToolbar()
             .navigationBarTitleDisplayMode(.inline)

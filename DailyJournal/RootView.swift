@@ -31,6 +31,9 @@ struct RootView: View {
                 .tabItem { Label("Streak", systemImage: "flame.fill") }
                 .tag(Tab.stats)
         }
+        .onChange(of: tab) { _, newTab in
+            AppLog.info("Tab: \(newTab), memory \(AppLog.memoryMB()) MB")
+        }
         .onChange(of: scenePhase) { _, phase in
             switch phase {
             case .background:
