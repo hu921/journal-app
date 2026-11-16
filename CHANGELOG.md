@@ -1,6 +1,6 @@
 # Changelog
 
-All changes to journipod: Journal & Diary, grouped by pull request, newest first.
+All changes to journipod Journal, grouped by pull request, newest first.
 
 Every new PR adds its own entry at the top of this file.
 
@@ -17,16 +17,16 @@ TestFlight: build N
 
 ## PR #9: Rename app to journipod (2026-11-15)
 
-TestFlight: builds 31 to 34 (latest: build 34)
+TestFlight: builds 31 to 35 (latest: build 35)
 
-- Home screen name is now "Journal Logs".
-- In-app name is now "journipod" (About, lock screen, import text, diagnostics).
-- Export files are named "journipod <date>". Export metadata says "journipod: Journal & Diary".
-- Logs page title is "Journal Logs", with a small subtitle under it: "Moments with photos & video".
-- About and map pins (entries without photos) now use the app icon.
+- App Store name: "journipod Journal" (set in App Store Connect).
+- Home screen name: "journi Diary".
+- Logs page title: "journi Diary", with a small subtitle: "Moments with photos & video". Tab name stays "Logs".
+- About shows the app icon, "journipod Journal", the version and "© 2026 journipod".
+- In-app name is "journipod" (lock screen, import text, diagnostics, export file names).
+- Map pins for entries without photos use the app icon.
 - Stats tab and page renamed to "Streak", with a flame tab icon.
-- Logs tab keeps its name. Bundle ID unchanged.
-- App Store name "journipod: Journal & Diary" is set in App Store Connect.
+- Bundle ID unchanged.
 
 ## PR #7: Add About Me page (2026-11-14)
 
