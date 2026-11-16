@@ -15,6 +15,13 @@ TestFlight: build N
 - Change two
 -->
 
+## PR #13: Compact Logs rows (2026-11-16)
+
+TestFlight: build 40
+
+- Logs thumbnails are smaller (40 pt) and round.
+- Less space between entries in the Logs list.
+
 ## PR #12: Color themes (2026-11-16)
 
 TestFlight: build 39

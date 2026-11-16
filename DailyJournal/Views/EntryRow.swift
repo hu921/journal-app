@@ -28,11 +28,10 @@ struct EntryRow: View {
 
             if entry.hasMedia {
                 EntryThumbnail(entry: entry)
-                    .frame(width: 52, height: 52)
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                    .frame(width: 40, height: 40)
+                    .clipShape(Circle())
             }
         }
-        .frame(minHeight: 52)
-        .padding(.vertical, 2)
+        .frame(minHeight: 40)
     }
 }
