@@ -15,6 +15,18 @@ TestFlight: build N
 - Change two
 -->
 
+## PR #10: Rename Google Drive backups to journi Diary (2026-11-16)
+
+TestFlight: build 37
+
+- Google Drive backups go in a "journi Diary Backups" folder.
+- New backup files are named "journi Diary Backup <date>.zip".
+- An existing "Daily Log Backups" folder is renamed on first use, so older backups still show and can be restored.
+- Export has a "Save to" choice: On My iPhone, iCloud Drive, or Share.
+- On My iPhone saves to Files > On My iPhone > journi Diary > journi Diary Backups.
+- iCloud Drive saves to Files > iCloud Drive > journi Diary > journi Diary Backups. Needs iCloud Documents turned on in Xcode (Signing & Capabilities > iCloud).
+- Export files are named "journi Diary <date>".
+
 ## PR #9: Rename app to journipod (2026-11-15)
 
 TestFlight: builds 31 to 36 (latest: build 36)
