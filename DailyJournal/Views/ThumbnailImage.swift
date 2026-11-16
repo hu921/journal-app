@@ -61,8 +61,15 @@ struct EntryThumbnail: View {
                 return
             }
             guard entry.hasMedia else { image = nil; return }
-            let data = await Self.firstThumbnail(of: entry.persistentModelID, container: context.container)
-            guard let data, !Task.isCancelled else { return }
+            var data = await Self.firstThumbnail(of: entry.persistentModelID, container: context.container)
+            guard !Task.isCancelled else { return }
+            if data == nil {
+                // The background read only sees saved data. A photo just added in the editor
+                // isn't saved yet, so read the thumbnail from the entry in memory instead.
+                // Without this the row stayed an empty circle after saving a new entry.
+                data = entry.thumbnailData
+            }
+            guard let data else { return }
             if let decoded = await ThumbnailCache.decode(data) {
                 ThumbnailCache.shared.store(decoded, for: key)
                 image = decoded
