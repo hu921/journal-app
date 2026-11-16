@@ -15,6 +15,15 @@ TestFlight: build N
 - Change two
 -->
 
+## PR #12: Color themes (2026-11-16)
+
+TestFlight: build 39
+
+- Settings > Appearance > Color: Orange (default), Sky Blue, Grass Green, Blossom Pink, Metal Grey.
+- The color changes buttons, highlights, the streak card and the tab bar.
+- The home screen icon changes to match. iOS shows a short notice when the icon changes.
+- About and map pins show the icon in the chosen color.
+
 ## PR #11: About title is journipod Diary: Journal (2026-11-16)
 
 TestFlight: build 38

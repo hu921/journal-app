@@ -97,7 +97,7 @@ struct EntryListView: View {
                         .font(.title2.weight(.semibold))
                         .foregroundStyle(.white)
                         .frame(width: 60, height: 60)
-                        .background(Circle().fill(Color.accentColor))
+                        .background(Circle().fill(.tint))
                         .shadow(radius: 4, y: 2)
                 }
                 .padding(24)

@@ -57,13 +57,14 @@ struct EntryMapView: View {
 
 private struct MapPin: View {
     let entry: JournalEntry
+    @AppStorage(SettingsKey.appColor) private var appColor = AppColor.orange.rawValue
 
     var body: some View {
         Group {
             if entry.hasMedia {
                 EntryThumbnail(entry: entry)
             } else {
-                Image("AppLogo")
+                Image(AppColor.from(appColor).logoName)
                     .resizable()
                     .scaledToFill()
             }

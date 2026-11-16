@@ -3,6 +3,7 @@ import SwiftData
 
 /// Simple numbers about the journal.
 struct StatsView: View {
+    @Environment(\.appAccent) private var appAccent
     @Query(sort: \JournalEntry.date, order: .reverse) private var entries: [JournalEntry]
     private let cal = Calendar.current
 
@@ -50,7 +51,7 @@ struct StatsView: View {
                         Spacer()
                     }
                     .padding()
-                    .background(Color.accentColor.gradient, in: RoundedRectangle(cornerRadius: 16))
+                    .background(appAccent.gradient, in: RoundedRectangle(cornerRadius: 16))
 
                     LazyVGrid(columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)],
                               spacing: 12) {
@@ -95,7 +96,7 @@ private struct StatTile: View {
             Text(value, format: .number)
                 .font(tall ? .system(size: 56, weight: .bold, design: .rounded)
                            : .system(size: 32, weight: .bold, design: .rounded))
-                .foregroundStyle(tall ? Color.accentColor : .primary)
+                .foregroundStyle(tall ? AnyShapeStyle(.tint) : AnyShapeStyle(.primary))
             if let unit {
                 Text(unit).appFont(.headline).foregroundStyle(.secondary)
             }
@@ -118,7 +119,7 @@ private struct OnThisDayView: View {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(entry.date, format: .dateTime.year())
                         .appFont(.caption, weight: .semibold)
-                        .foregroundStyle(Color.accentColor)
+                        .foregroundStyle(.tint)
                     EntryRow(entry: entry, showsDay: false)
                 }
             }

@@ -8,6 +8,7 @@ struct AppearanceView: View {
     @AppStorage(SettingsKey.customFontSize) private var customSize = 17.0
     @AppStorage(SettingsKey.autoTitleFirstLine) private var autoTitle = true
     @AppStorage(SettingsKey.showCalendarPhotos) private var calendarPhotos = true
+    @AppStorage(SettingsKey.appColor) private var appColor = AppColor.orange.rawValue
 
     private static let sizeRange = 10.0...40.0
 
@@ -19,6 +20,31 @@ struct AppearanceView: View {
                 }
                 .pickerStyle(.segmented)
                 .labelsHidden()
+            }
+
+            Section {
+                ForEach(AppColor.allCases) { option in
+                    Button {
+                        choose(option)
+                    } label: {
+                        HStack(spacing: 14) {
+                            Image(option.logoName)
+                                .resizable()
+                                .frame(width: 36, height: 36)
+                                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                            Text(option.label).foregroundStyle(.primary)
+                            Spacer()
+                            if option.rawValue == appColor {
+                                Image(systemName: "checkmark").foregroundStyle(option.color).fontWeight(.semibold)
+                            }
+                        }
+                    }
+                    .accessibilityAddTraits(option.rawValue == appColor ? .isSelected : [])
+                }
+            } header: {
+                Text("Color")
+            } footer: {
+                Text("Changes the app color and the home screen icon.")
             }
 
             Section("Font") {
@@ -73,7 +99,28 @@ struct AppearanceView: View {
                 Text("When on, the first line of your text becomes the entry title.")
             }
         }
+        .onAppear(perform: syncIconIfNeeded)
         .navigationTitle("Appearance")
         .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private func choose(_ option: AppColor) {
+        guard option.rawValue != appColor else { return }
+        appColor = option.rawValue
+        setIcon(option.iconName)
+    }
+
+    /// If the icon and saved color ever differ (for example after a restore), match them.
+    private func syncIconIfNeeded() {
+        let wanted = AppColor.from(appColor).iconName
+        if UIApplication.shared.alternateIconName != wanted { setIcon(wanted) }
+    }
+
+    private func setIcon(_ name: String?) {
+        guard UIApplication.shared.supportsAlternateIcons,
+              UIApplication.shared.alternateIconName != name else { return }
+        UIApplication.shared.setAlternateIconName(name) { error in
+            if let error { AppLog.error("Icon change failed: \(error)") }
+        }
     }
 }

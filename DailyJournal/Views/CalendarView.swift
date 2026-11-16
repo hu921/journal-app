@@ -207,14 +207,14 @@ private struct DayCell: View {
                 .clipped()
                 .overlay(Color.black.opacity(0.25))
             } else {
-                Rectangle().fill(isToday ? Color.accentColor : Color(.secondarySystemBackground))
+                Rectangle().fill(isToday ? AnyShapeStyle(.tint) : AnyShapeStyle(Color(.secondarySystemBackground)))
             }
             VStack(spacing: 2) {
                 Text(day, format: .dateTime.day())
                     .appFont(.headline)
                     .foregroundStyle(thumbnail != nil || isToday ? .white : .primary)
                 if thumbnail == nil && !entries.isEmpty {
-                    Circle().fill(isToday ? Color.white : Color.accentColor)
+                    Circle().fill(isToday ? AnyShapeStyle(Color.white) : AnyShapeStyle(.tint))
                         .frame(width: 6, height: 6)
                 }
             }

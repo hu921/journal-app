@@ -104,7 +104,7 @@ final class AppLock: ObservableObject {
 private struct PrivacyCover: View {
     var body: some View {
         ZStack {
-            Color.accentColor.ignoresSafeArea()
+            Rectangle().fill(.tint).ignoresSafeArea()
             Image(systemName: "lock.fill")
                 .font(.system(size: 44))
                 .foregroundStyle(.white)

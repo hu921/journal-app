@@ -108,7 +108,7 @@ struct ProfileView: View {
                         Text("Signature").foregroundStyle(.primary)
                         Spacer()
                         Text(profile.signature == nil ? "Add" : "Change")
-                            .foregroundStyle(Color.accentColor)
+                            .foregroundStyle(.tint)
                     }
                 }
             }
@@ -142,9 +142,9 @@ struct ProfileView: View {
                 Spacer()
                 if let date = profile.birthday {
                     Text(date, format: .dateTime.month(.wide).day().year())
-                        .foregroundStyle(editingBirthday ? Color.accentColor : .secondary)
+                        .foregroundStyle(editingBirthday ? AnyShapeStyle(.tint) : AnyShapeStyle(.secondary))
                 } else {
-                    Text("Add").foregroundStyle(Color.accentColor)
+                    Text("Add").foregroundStyle(.tint)
                 }
             }
         }
@@ -193,7 +193,7 @@ struct ProfileAvatar: View {
 
     var body: some View {
         ZStack {
-            Circle().fill(Color.accentColor)
+            Circle().fill(.tint)
             if let photo, let image = UIImage(data: photo) {
                 Image(uiImage: image)
                     .resizable()
