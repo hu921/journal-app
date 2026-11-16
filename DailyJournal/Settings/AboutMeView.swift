@@ -27,7 +27,7 @@ struct AboutMeView: View {
                             .appFont(.subheadline, weight: .semibold)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding()
-                            .background(Color.accentColor.opacity(0.12), in: RoundedRectangle(cornerRadius: 12))
+                            .background(.tint.opacity(0.12), in: RoundedRectangle(cornerRadius: 12))
                     }
                 }
 
@@ -71,7 +71,7 @@ struct AboutMeView: View {
                             VStack(alignment: .leading, spacing: 4) {
                                 Text(entry.date, format: .dateTime.month(.wide).year())
                                     .appFont(.subheadline, weight: .semibold)
-                                    .foregroundStyle(Color.accentColor)
+                                    .foregroundStyle(.tint)
                                 if !entry.mood.isEmpty { InfoRow(label: "Mood", value: entry.mood) }
                                 if !entry.intoNow.isEmpty { InfoRow(label: "Into", value: entry.intoNow) }
                                 if !entry.goals.isEmpty { InfoRow(label: "Goals", value: entry.goals) }

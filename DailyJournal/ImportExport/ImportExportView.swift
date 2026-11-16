@@ -26,7 +26,7 @@ struct ImportExportView: View {
                 VStack(spacing: 10) {
                     Image(systemName: "square.and.arrow.up.on.square")
                         .font(.system(size: 40))
-                        .foregroundStyle(Color.accentColor)
+                        .foregroundStyle(.tint)
                     Text("Save a copy of your journal, or bring in entries from another app.")
                         .appFont(.footnote)
                         .foregroundStyle(.secondary)

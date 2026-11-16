@@ -76,7 +76,7 @@ struct EntryEditorView: View {
                         showLocationPicker = true
                     } label: {
                         Label(draftPlace ?? "Add location", systemImage: "mappin.and.ellipse")
-                            .foregroundStyle(draftPlace == nil ? Color.accentColor : .primary)
+                            .foregroundStyle(draftPlace == nil ? AnyShapeStyle(.tint) : AnyShapeStyle(.primary))
                             .lineLimit(1)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .contentShape(Rectangle())

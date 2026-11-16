@@ -3,6 +3,7 @@ import SwiftUI
 struct AboutView: View {
     @State private var logURL: URL?
     @State private var confirmClear = false
+    @AppStorage(SettingsKey.appColor) private var appColor = AppColor.orange.rawValue
 
     /// Support email shown in About. Empty for now; fill in to show a tappable address.
     static let contactEmail = ""
@@ -17,7 +18,7 @@ struct AboutView: View {
         List {
             Section {
                 VStack(spacing: 8) {
-                    Image("AppLogo")
+                    Image(AppColor.from(appColor).logoName)
                         .resizable()
                         .frame(width: 80, height: 80)
                         .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))

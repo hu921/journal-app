@@ -8,6 +8,7 @@ enum SettingsKey {
     static let customFontSize = "customFontSize"
     static let autoTitleFirstLine = "autoTitleFirstLine"
     static let showCalendarPhotos = "showCalendarPhotos"
+    static let appColor = "appColor"
 }
 
 enum AppTheme: String, CaseIterable, Identifiable {
@@ -46,6 +47,62 @@ enum AppFontFamily: String, CaseIterable, Identifiable {
         case .lato: "Lato"
         case .openSans: "Open Sans"
         }
+    }
+}
+
+/// Color theme for the app and its home screen icon.
+enum AppColor: String, CaseIterable, Identifiable {
+    case orange, skyBlue, grassGreen, blossomPink, metalGrey
+    var id: String { rawValue }
+
+    var label: String {
+        switch self {
+        case .orange: "Orange"
+        case .skyBlue: "Sky Blue"
+        case .grassGreen: "Grass Green"
+        case .blossomPink: "Blossom Pink"
+        case .metalGrey: "Metal Grey"
+        }
+    }
+
+    var color: Color {
+        switch self {
+        case .orange: Color(red: 0.910, green: 0.478, blue: 0.290)
+        case .skyBlue: Color(red: 0.290, green: 0.600, blue: 0.890)
+        case .grassGreen: Color(red: 0.330, green: 0.660, blue: 0.360)
+        case .blossomPink: Color(red: 0.920, green: 0.420, blue: 0.620)
+        case .metalGrey: Color(red: 0.470, green: 0.500, blue: 0.540)
+        }
+    }
+
+    /// Asset suffix used by the alternate icons and logos ("" for the default orange).
+    private var suffix: String {
+        switch self {
+        case .orange: ""
+        case .skyBlue: "-SkyBlue"
+        case .grassGreen: "-GrassGreen"
+        case .blossomPink: "-BlossomPink"
+        case .metalGrey: "-MetalGrey"
+        }
+    }
+
+    /// Home screen icon name; nil is the main icon.
+    var iconName: String? { self == .orange ? nil : "AppIcon" + suffix }
+    /// In-app copy of the icon (About page, map pins).
+    var logoName: String { "AppLogo" + suffix }
+
+    static func from(_ raw: String) -> AppColor { AppColor(rawValue: raw) ?? .orange }
+}
+
+private struct AppAccentKey: EnvironmentKey {
+    static let defaultValue = AppColor.orange.color
+}
+
+extension EnvironmentValues {
+    /// The chosen theme color, for places that need a Color (gradients).
+    var appAccent: Color {
+        get { self[AppAccentKey.self] }
+        set { self[AppAccentKey.self] = newValue }
     }
 }
 
@@ -119,10 +176,14 @@ extension View {
 
 struct AppAppearanceModifier: ViewModifier {
     @AppStorage(SettingsKey.theme) private var theme = AppTheme.system.rawValue
+    @AppStorage(SettingsKey.appColor) private var appColor = AppColor.orange.rawValue
 
     func body(content: Content) -> some View {
+        let accent = AppColor.from(appColor).color
         content
             .appFont(.body)
+            .tint(accent)
+            .environment(\.appAccent, accent)
             .preferredColorScheme((AppTheme(rawValue: theme) ?? .system).colorScheme)
     }
 }

@@ -16,7 +16,7 @@ struct LockScreen: View {
             Spacer()
             Image(systemName: "lock.fill")
                 .font(.system(size: 36))
-                .foregroundStyle(Color.accentColor)
+                .foregroundStyle(.tint)
             Text(message).appFont(.title3, weight: .semibold)
 
             PasscodeDots(count: code.count)
@@ -119,8 +119,8 @@ struct PasscodeDots: View {
         HStack(spacing: 18) {
             ForEach(0..<4, id: \.self) { i in
                 Circle()
-                    .strokeBorder(Color.accentColor, lineWidth: 1.5)
-                    .background(Circle().fill(i < count ? Color.accentColor : .clear))
+                    .strokeBorder(.tint, lineWidth: 1.5)
+                    .background(Circle().fill(i < count ? AnyShapeStyle(.tint) : AnyShapeStyle(.clear)))
                     .frame(width: 16, height: 16)
             }
         }

@@ -42,7 +42,7 @@ struct MonthScrubber: View {
                         .font(.subheadline.weight(.semibold))
                         .padding(.horizontal, 12)
                         .padding(.vertical, 6)
-                        .background(Color.accentColor, in: Capsule())
+                        .background(.tint, in: Capsule())
                         .foregroundStyle(.white)
                         .fixedSize()
                         .position(x: geo.size.width - handleSize.width - 90, y: handleY)
@@ -54,7 +54,7 @@ struct MonthScrubber: View {
                     .font(.caption.weight(.bold))
                     .foregroundStyle(isDragging ? .white : .secondary)
                     .frame(width: handleSize.width, height: handleSize.height)
-                    .background(isDragging ? AnyShapeStyle(Color.accentColor) : AnyShapeStyle(.regularMaterial),
+                    .background(isDragging ? AnyShapeStyle(.tint) : AnyShapeStyle(.regularMaterial),
                                 in: UnevenRoundedRectangle(topLeadingRadius: 22, bottomLeadingRadius: 22))
                     .shadow(color: .black.opacity(0.15), radius: 3, x: -1, y: 1)
                     .position(x: geo.size.width - handleSize.width / 2, y: handleY)
