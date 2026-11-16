@@ -1,4 +1,4 @@
-# journipod Journal
+# journipod Diary: Journal
 
 A simple iOS journal app. SwiftUI + SwiftData, synced with iCloud (CloudKit).
 
