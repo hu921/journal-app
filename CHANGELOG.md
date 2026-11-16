@@ -15,6 +15,12 @@ TestFlight: build N
 - Change two
 -->
 
+## PR #14: Thumbnail shows right after saving (2026-11-16)
+
+TestFlight: build 41
+
+- Logs: a new entry's photo thumbnail now shows as soon as you tap Done, instead of an empty grey circle.
+
 ## PR #13: Compact Logs rows (2026-11-16)
 
 TestFlight: build 40
