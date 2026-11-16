@@ -22,7 +22,7 @@ struct AboutView: View {
                         .frame(width: 80, height: 80)
                         .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
                         .accessibilityHidden(true)
-                    Text("journipod Journal").appFont(.title2, weight: .bold)
+                    Text("journipod Diary: Journal").appFont(.title2, weight: .bold)
                     Text("Version \(version)").appFont(.subheadline).foregroundStyle(.secondary)
                     Text("© 2026 journipod").appFont(.footnote).foregroundStyle(.secondary)
                 }

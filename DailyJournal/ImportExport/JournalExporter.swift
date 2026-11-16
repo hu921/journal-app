@@ -74,7 +74,7 @@ actor JournalExporter {
             var type: String
             var orderInEntry: Int
         }
-        var metadata = ["version": "1.0", "app": "journipod Journal"]
+        var metadata = ["version": "1.0", "app": "journipod Diary: Journal"]
         var entries: [Entry]
     }
 

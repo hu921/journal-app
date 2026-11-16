@@ -1,6 +1,6 @@
 # Changelog
 
-All changes to journipod Journal, grouped by pull request, newest first.
+All changes to journipod Diary: Journal, grouped by pull request, newest first.
 
 Every new PR adds its own entry at the top of this file.
 
@@ -14,6 +14,13 @@ TestFlight: build N
 - Change one
 - Change two
 -->
+
+## PR #11: About title is journipod Diary: Journal (2026-11-16)
+
+TestFlight: build 38
+
+- About page title is now "journipod Diary: Journal", matching the App Store name.
+- Export metadata says "journipod Diary: Journal".
 
 ## PR #10: Rename Google Drive backups to journi Diary (2026-11-16)
 
