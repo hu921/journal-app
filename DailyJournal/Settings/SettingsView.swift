@@ -10,6 +10,18 @@ struct SettingsView: View {
         return name.isEmpty ? "Add your name" : name
     }
 
+    @AppStorage("iCloudSyncOn") private var iCloudOn = true
+    @ObservedObject private var backup = BackupManager.shared
+    @ObservedObject private var syncMonitor = SyncMonitor.shared
+
+    private var syncOn: Bool { iCloudOn || backup.isOn }
+
+    /// The latest of the iCloud sync and the Google Drive backup.
+    private var lastSync: Date? {
+        [iCloudOn ? syncMonitor.lastICloudSync : nil, backup.isOn ? backup.lastBackup : nil]
+            .compactMap { $0 }.max()
+    }
+
     var body: some View {
         List {
             Section {
@@ -24,6 +36,25 @@ struct SettingsView: View {
                         }
                     }
                     .padding(.vertical, 4)
+                }
+            }
+
+            Section {
+                NavigationLink { BackupView() } label: {
+                    LabeledContent {
+                        Text(syncOn ? "On" : "Off")
+                    } label: {
+                        Label("Sync", systemImage: "icloud")
+                    }
+                }
+                LabeledContent {
+                    if let last = lastSync {
+                        Text(last, format: .dateTime.month(.abbreviated).day().year().hour().minute())
+                    } else {
+                        Text("Not yet")
+                    }
+                } label: {
+                    Label("Last Sync", systemImage: "arrow.triangle.2.circlepath")
                 }
             }
 
